@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>  
+	<AddIn Type="Application">
+		<Name>GetImages</Name>
+		<Assembly>GetImages.dll</Assembly>
+		<FullClassName>GetImages_2.App</FullClassName>
+		<ClientId>D32AFE72-3D40-45B5-9F3F-73B7C01C1856</ClientId>
+		<VendorId>BOLDstd</VendorId>
+		<VendorDescription>BOLDstd, http://boldstd.it/ </VendorDescription>
+	</AddIn>
+	<AddIn Type="Command">
+		<Text>Command GetImages</Text>
+		<Description>Some description for ModelessForm_ExternalEvent</Description>
+		<Assembly>GetImages.dll</Assembly>
+		<FullClassName>GetImages_2.Command</FullClassName>
+		<ClientId>3D1B587D-487D-47A4-8C87-1AEC93C55012</ClientId>
+		<VendorId>BOLDstd</VendorId>
+		<VendorDescription>BOLDstd, http://boldstd.it/ </VendorDescription>
+	</AddIn>	
+</RevitAddIns>
