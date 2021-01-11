@@ -35,6 +35,18 @@ namespace GetImages_2
         private RequestHandler m_Handler;
         private ExternalEvent m_ExEvent;
 
+        // Valore del TextBox della View Scale modificato 
+        private int _scaleEdit;
+
+        #region Class public property
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public int ScaleView
+        {
+            get { return _scaleEdit; }
+        }
+        #endregion
 
         /// <summary>
         ///   Costruttore della finestra di dialogo
@@ -131,6 +143,11 @@ namespace GetImages_2
         /// 
         private void exitButton_Click_1(object sender, EventArgs e)
         {
+            MakeRequest(RequestId.Esc);
+        }
+
+        public void CloseForm()
+        {
             Close();
         }
 
@@ -167,6 +184,10 @@ namespace GetImages_2
                     $"Details:\n\n{ex.StackTrace}");
                 }
             }
+            else
+            {
+                MessageBox.Show("Non hai selezionato nessun file.");
+            }
             return filePath;
         }
 
@@ -199,5 +220,11 @@ namespace GetImages_2
             exportViewTextBox.Text = m_Handler.ExportedView;
         }
 
+
+        private void viewScaleButton_Click(object sender, EventArgs e)
+        {
+            string text = viewScaleTextBox.Text;
+            _scaleEdit = Convert.ToInt32(text);
+        }
     }  // class
 }

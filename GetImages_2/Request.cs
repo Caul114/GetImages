@@ -45,6 +45,14 @@ namespace GetImages_2
         /// "Export" request
         /// </summary>
         Export = 3,
+        /// <summary>
+        /// "Exit" request
+        /// </summary>
+        Esc = 4,
+        /// <summary>
+        /// "Scale" request
+        /// </summary>
+        Scale = 5,
     }
 
     /// <summary>

@@ -56,6 +56,9 @@ namespace GetImages_2
         // La stringa con il nome dell'ultimo file salvato
         private string _exportedView;
 
+        // Valore contenuto nella View Scale
+        private int _scale = 30;
+
         #endregion
 
         #region Class public property
@@ -89,6 +92,14 @@ namespace GetImages_2
         public String ExportedView
         {
             get { return _exportedView; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public int Scale
+        {
+            get { return _scale; }
         }
         #endregion
 
@@ -137,25 +148,51 @@ namespace GetImages_2
                             // Ottiene il Path del file da importare
                             _path = modelessForm.GetPath();
                             // Apre il file selezionato
-                            OpenFile(uiapp, _path);
-                            // Scrive nel TextBox l'ultima operazione effettuata
-                            modelessForm.LastFileOpened();
+                            if(_path != "")
+                            {
+                                OpenFile(uiapp, _path);
+                                // Scrive nel TextBox l'ultima operazione effettuata
+                                modelessForm.LastFileOpened();
+                            }
                             break;
                         }
                     case RequestId.View:
                         {
+                            // Apro la vista selezionata
                             OpenView(uiapp);
                             break;
                         }
                     case RequestId.Export:
                         {
-                            ExportViewActive(uiapp);
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
+                            // Richiama il valore della View Scale
+                            int value = modelessForm.ScaleView;
+                            if (value != _scale && value != 0)
+                            {
+                                _scale = value;
+                            }
+                            // Cambio la scala della vista attiva
+                            ChangeScale(uiapp, _path);
+                            // Esporta la View attiva 
+                            ExportViewActive(uiapp);
                             // Scrive nel TextBox l'ultima operazione effettuata
                             modelessForm.LastViewExported();
                             break;
                         }
+                    case RequestId.Esc:
+                        {
+                            // Chiude qualsiasi documento sia ancora aperto
+                            CloseDocByCommand(uiapp);
+                            // Chiama la Form
+                            modelessForm = App.thisApp.RetriveForm();
+                            // Chiude la Form
+                            modelessForm.CloseForm();
+                            break;
+                        }
+                    case RequestId.Scale:
+
+                        break;
                     default:
                         {
                             // Una sorta di avviso qui dovrebbe informarci di una richiesta imprevista
@@ -170,6 +207,7 @@ namespace GetImages_2
             }
             return;
         }
+
 
 
         /// <summary>
@@ -192,7 +230,34 @@ namespace GetImages_2
             }
         }
 
+        /// <summary>
+        /// Metodo per la modifica della Scala della View
+        /// </summary>
+        private void ChangeScale(UIApplication uiapp, string path)
+        {
+            Autodesk.Revit.DB.View viewActive = uiapp.ActiveUIDocument.Document.ActiveView;
+            Document doc = viewActive.Document;
 
+            // Cambia la View Scale della View attiva
+            using (Transaction tsx = new Transaction(doc))
+            {
+                tsx.Start("Change the View Scale");
+
+                doc.ActiveView.get_Parameter(
+                      BuiltInParameter.VIEW_SCALE)
+                        .Set(_scale);
+
+                tsx.Commit();
+            }
+
+            //// Salva le modifiche fatte alla View
+            //SaveAsOptions opt = new SaveAsOptions
+            //{
+            //    OverwriteExistingFile = true
+            //};
+
+            //doc.SaveAs(path, opt);
+        }
 
         /// <summary>
         /// Metodo per l'apertura della view
@@ -215,13 +280,14 @@ namespace GetImages_2
                 modelessForm = App.thisApp.RetriveForm();
                 // Scrive nel TextBox l'ultima operazione effettuata
                 modelessForm.LastViewOpened();
+                // Salvo ed esco
                 uidoc.SaveAndClose();
             }
 
             foreach (Autodesk.Revit.DB.View viewElement in viewCollector)
             {
                 var name = viewElement.Name;                
-                string[] elevations = new string[] { "Exterior", "Interior", "Left", "Right" };
+                //string[] elevations = new string[] { "Exterior", "Interior", "Left", "Right" };
 
                 switch(name)
                 {
@@ -234,6 +300,7 @@ namespace GetImages_2
                             modelessForm = App.thisApp.RetriveForm();
                             // Scrive nel TextBox l'ultima operazione effettuata
                             modelessForm.LastViewOpened();
+                            // Salvo ed esco
                             uidoc.SaveAndClose();                            
                         }
                         break;
@@ -246,6 +313,7 @@ namespace GetImages_2
                             modelessForm = App.thisApp.RetriveForm();
                             // Scrive nel TextBox l'ultima operazione effettuata
                             modelessForm.LastViewOpened();
+                            // Salvo ed esco
                             uidoc.SaveAndClose();
                         }
                         break;
@@ -258,6 +326,7 @@ namespace GetImages_2
                             modelessForm = App.thisApp.RetriveForm();
                             // Scrive nel TextBox l'ultima operazione effettuata
                             modelessForm.LastViewOpened();
+                            // Salvo ed esco
                             uidoc.SaveAndClose();
                         }
                         break;
@@ -270,6 +339,7 @@ namespace GetImages_2
                             modelessForm = App.thisApp.RetriveForm();
                             // Scrive nel TextBox l'ultima operazione effettuata
                             modelessForm.LastViewOpened();
+                            // Salvo ed esco
                             uidoc.SaveAndClose();
                         }
                         break;
@@ -372,8 +442,6 @@ namespace GetImages_2
 
             uiapp.PostCommand(closeDoc);
         }
-
-
 
     }  // class
 
