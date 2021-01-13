@@ -48,7 +48,19 @@ namespace GetImages_2
         private ModelessForm modelessForm;
 
         // La stringa da riempire con la Path
-        private string _path;
+        private static string _path = "";
+
+        // Stabilisce il percorso di salvataggio delle imaagini
+        private string _desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Images";
+
+        // Ricava il nome del file da salvare
+        private static string _pathName = Path.GetFileNameWithoutExtension(_path);
+
+        // Percorso temporaneo della cartella dei file salvati
+        private static string _dirpath = @"C:\Users\Bold\Documents\Bold Software\GetImages\File modificati";
+
+        // Percorso temporaneo dei file salvati
+        private static string _filepath = "";
 
         // La stringa che memorizza l'ultima view vista
         private string _imageViewed = "";
@@ -58,6 +70,9 @@ namespace GetImages_2
 
         // Valore contenuto nella View Scale
         private int _scale = 30;
+
+        // Valore booleano che mi dice se cancellare o meno un file
+        private bool _clear = false;
 
         #endregion
 
@@ -143,6 +158,8 @@ namespace GetImages_2
                         }
                     case RequestId.File:
                         {
+                            // Cancella i file
+                            DeleteFileModified();
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
                             // Ottiene il Path del file da importare
@@ -164,6 +181,8 @@ namespace GetImages_2
                         }
                     case RequestId.Export:
                         {
+                            // Definisce il nome del path
+                            _pathName = Path.GetFileNameWithoutExtension(_path);
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
                             // Richiama il valore della View Scale
@@ -174,20 +193,29 @@ namespace GetImages_2
                             }
                             // Cambio la scala della vista attiva
                             ChangeScale(uiapp, _path);
+                            // Cambio il livello di dettaglio della vista attiva
+                            ChangeDetailLevel(uiapp, _path);
+                            // Cambio il livello di dettaglio della vista attiva
+                            ChangeVisualStyle(uiapp, _path);
+                            // Salvo le modifiche effettuate sulla vista
+                            SaveChanges(uiapp);
                             // Esporta la View attiva 
                             ExportViewActive(uiapp);
-                            // Scrive nel TextBox l'ultima operazione effettuata
+                            // Mostra nel TextBox l'ultima view esportata
                             modelessForm.LastViewExported();
                             break;
                         }
                     case RequestId.Esc:
                         {
-                            // Chiude qualsiasi documento sia ancora aperto
-                            CloseDocByCommand(uiapp);
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
                             // Chiude la Form
                             modelessForm.CloseForm();
+                            // Chiude il documento .rfa ancora aperto
+                            if(_path.Contains(".rfa"))
+                            {
+                                CloseDocByCommand(uiapp);
+                            }
                             break;
                         }
                     case RequestId.Scale:
@@ -231,6 +259,51 @@ namespace GetImages_2
         }
 
         /// <summary>
+        /// Metodo che salva il file modificato in un certo percorso
+        /// </summary>
+        private void SaveChanges(UIApplication uiapp)
+        {
+            _filepath= _dirpath + "\\" + _pathName + ".rfa";
+
+            // Salva le modifiche al file
+            Document doc = uiapp.ActiveUIDocument.Document;
+
+            SaveAsOptions opt = new SaveAsOptions
+            {
+                OverwriteExistingFile = true
+            };
+
+            doc.SaveAs(_filepath, opt);
+        }
+
+        /// <summary>
+        /// Metodo che cancella il file in un certo percorso
+        /// </summary>
+        private void DeleteFile(string dirPath)
+        {
+            if (Directory.Exists(dirPath))
+            {
+                var files = Directory.EnumerateFiles(dirPath, "*.rfa");
+
+                if(files.Count() > 0)
+                {
+                    List<string> backUpFiles = new List<string>();
+
+                    foreach (string file in files)
+                    {
+                        backUpFiles.Add(file);
+                    }
+
+                    foreach (string file in backUpFiles)
+                    {
+                        File.Delete(file);
+                    }
+
+                }
+            }
+        }
+
+        /// <summary>
         /// Metodo per la modifica della Scala della View
         /// </summary>
         private void ChangeScale(UIApplication uiapp, string path)
@@ -250,13 +323,56 @@ namespace GetImages_2
                 tsx.Commit();
             }
 
-            //// Salva le modifiche fatte alla View
-            //SaveAsOptions opt = new SaveAsOptions
-            //{
-            //    OverwriteExistingFile = true
-            //};
+            //// metodo che salva il file in un percorso 
+            //SaveChanges(uiapp);
+        }
 
-            //doc.SaveAs(path, opt);
+        /// <summary>
+        /// Metodo per la modifica della Livello di Dettaglio della View
+        /// </summary>
+        private void ChangeDetailLevel(UIApplication uiapp, string path)
+        {
+            Autodesk.Revit.DB.View viewActive = uiapp.ActiveUIDocument.Document.ActiveView;
+            Document doc = viewActive.Document;
+
+            // Cambia il Livello di Dettaglio della View attiva
+            using (Transaction tsx = new Transaction(doc))
+            {
+                tsx.Start("Change the View Detail Level");
+
+                doc.ActiveView.get_Parameter(
+                      BuiltInParameter.VIEW_DETAIL_LEVEL)
+                        .Set(modelessForm.DetailLevelIndex);
+
+                tsx.Commit();
+            }
+
+            //// metodo che salva il file in un percorso 
+            //SaveChanges(uiapp);
+        }
+
+        /// <summary>
+        /// Metodo per la modifica dello Stile di Visualizzazione della View
+        /// </summary>
+        private void ChangeVisualStyle(UIApplication uiapp, string path)
+        {
+            Autodesk.Revit.DB.View viewActive = uiapp.ActiveUIDocument.Document.ActiveView;
+            Document doc = viewActive.Document;
+
+            // Cambia lo Stile di Visualizzazione della View attiva
+            using (Transaction tsx = new Transaction(doc))
+            {
+                tsx.Start("Change the Visual Style Level");
+
+                doc.ActiveView.get_Parameter(
+                      BuiltInParameter.MODEL_GRAPHICS_STYLE)
+                        .Set(modelessForm.VisualStyleIndex);
+
+                tsx.Commit();
+            }
+
+            //// metodo che salva il file in un percorso 
+            //SaveChanges(uiapp);
         }
 
         /// <summary>
@@ -278,8 +394,8 @@ namespace GetImages_2
                 _imageViewed = nameViewActive;
                 // Chiama la Form
                 modelessForm = App.thisApp.RetriveForm();
-                // Scrive nel TextBox l'ultima operazione effettuata
-                modelessForm.LastViewOpened();
+                // Mostra nella combobox la vista attiva
+                modelessForm.AssignValueComboBox();
                 // Salvo ed esco
                 uidoc.SaveAndClose();
             }
@@ -298,8 +414,8 @@ namespace GetImages_2
                             _imageViewed = name;
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
-                            // Scrive nel TextBox l'ultima operazione effettuata
-                            modelessForm.LastViewOpened();
+                            // Mostra nella combobox la vista attiva
+                            modelessForm.AssignValueComboBox();
                             // Salvo ed esco
                             uidoc.SaveAndClose();                            
                         }
@@ -311,8 +427,8 @@ namespace GetImages_2
                             _imageViewed = name;
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
-                            // Scrive nel TextBox l'ultima operazione effettuata
-                            modelessForm.LastViewOpened();
+                            // Mostra nella combobox la vista attiva
+                            modelessForm.AssignValueComboBox();
                             // Salvo ed esco
                             uidoc.SaveAndClose();
                         }
@@ -324,8 +440,8 @@ namespace GetImages_2
                             _imageViewed = name;
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
-                            // Scrive nel TextBox l'ultima operazione effettuata
-                            modelessForm.LastViewOpened();
+                            // Mostra nella combobox la vista attiva
+                            modelessForm.AssignValueComboBox();
                             // Salvo ed esco
                             uidoc.SaveAndClose();
                         }
@@ -337,8 +453,8 @@ namespace GetImages_2
                             _imageViewed = name;
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
-                            // Scrive nel TextBox l'ultima operazione effettuata
-                            modelessForm.LastViewOpened();
+                            // Mostra nella combobox la vista attiva
+                            modelessForm.AssignValueComboBox();
                             // Salvo ed esco
                             uidoc.SaveAndClose();
                         }
@@ -354,12 +470,6 @@ namespace GetImages_2
         {
             UIDocument uidoc = uiapp.ActiveUIDocument;
             Document doc = uidoc.Document;
-
-            // Stabilisce il percorso di salvataggio delle imaagini
-            string desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\GetImages\Images";
-
-            // Ricava il nome del file da salvare
-            string pathName = Path.GetFileNameWithoutExtension(_path);
 
             // Recupera la view attiva
             Autodesk.Revit.DB.View viewActive = doc.ActiveView;
@@ -378,16 +488,16 @@ namespace GetImages_2
                     switch(name)
                     {
                         case "Exterior":
-                            filepath = Path.Combine(desktop_path, pathName + "_F.png");
+                            filepath = Path.Combine(_desktop_path, _pathName + "_F.png");
                             break;
                         case "Interior":
-                            filepath = Path.Combine(desktop_path, pathName + "_P.png");
+                            filepath = Path.Combine(_desktop_path, _pathName + "_P.png");
                             break;
                         case "Right":
-                            filepath = Path.Combine(desktop_path, pathName + "_R.png");
+                            filepath = Path.Combine(_desktop_path, _pathName + "_R.png");
                             break;
                         case "Left":
-                            filepath = Path.Combine(desktop_path, pathName + "_L.png");
+                            filepath = Path.Combine(_desktop_path, _pathName + "_L.png");
                             break;
                     }
 
@@ -408,7 +518,7 @@ namespace GetImages_2
                     // Esporta l'immagine viewActive con le specifiche salvate
                     doc.ExportImage(img);
 
-                    tx.Commit();
+                    tx.RollBack();
 
                     //// Cambia l'estensione dell'immagine in .png
                     //filepath = Path.ChangeExtension(filepath, "png");
@@ -432,15 +542,36 @@ namespace GetImages_2
         /// </summary>
         /// <remarks>
         /// </remarks>
-        /// <param name="uiapp">L'oggetto Applicazione di Revit</param>m>
-        /// 
+        /// <param name="uiapp">L'oggetto Applicazione di Revit</param>
         private void CloseDocByCommand(UIApplication uiapp)
         {
+            Document doc = uiapp.ActiveUIDocument.Document;
+
+            // Dà il comando di chiusura del documento aperto
             RevitCommandId closeDoc
               = RevitCommandId.LookupPostableCommandId(
                 PostableCommand.Close);
-
             uiapp.PostCommand(closeDoc);
+
+            // Assegno alla comboBox della View il valore predefinito
+            modelessForm.AssignValueComboBoxDefault();
+        }
+
+        /// <summary>
+        ///   Metodo che cancella tutti i file modificati contenuti nela cartella di Default
+        /// </summary>
+        /// <remarks>
+        /// </remarks>
+        /// <param name="uiapp">L'oggetto Applicazione di Revit</param>
+        public void DeleteFileModified()
+        {
+            //_clear = true;
+
+            // Cancella o meno gli eventuali file modificati
+            if (!_clear)
+            {
+                DeleteFile(_dirpath);
+            }
         }
 
     }  // class

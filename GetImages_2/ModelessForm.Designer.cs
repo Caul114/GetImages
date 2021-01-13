@@ -42,28 +42,36 @@ namespace GetImages_2
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.visualStyleComboBox = new System.Windows.Forms.ComboBox();
+            this.detailLevelComboBox = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.viewScaleTextBox = new System.Windows.Forms.TextBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.openViewComboBox = new System.Windows.Forms.ComboBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.openViewTextBox = new System.Windows.Forms.TextBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.viewScaleTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.viewScaleButton = new System.Windows.Forms.Button();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.clearEditFile = new System.Windows.Forms.Button();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.groupBox5.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.groupBox5.SuspendLayout();
-            this.groupBox7.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // exitButton
             // 
-            this.exitButton.Location = new System.Drawing.Point(580, 524);
+            this.exitButton.Location = new System.Drawing.Point(187, 63);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(75, 23);
+            this.exitButton.Size = new System.Drawing.Size(93, 32);
             this.exitButton.TabIndex = 0;
             this.exitButton.Text = "Exit";
             this.exitButton.UseVisualStyleBackColor = true;
@@ -146,10 +154,97 @@ namespace GetImages_2
             this.groupBox3.Controls.Add(this.openViewButton);
             this.groupBox3.Location = new System.Drawing.Point(38, 270);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(302, 302);
+            this.groupBox3.Size = new System.Drawing.Size(302, 363);
             this.groupBox3.TabIndex = 8;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Caricamento Vista";
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.visualStyleComboBox);
+            this.groupBox7.Controls.Add(this.detailLevelComboBox);
+            this.groupBox7.Controls.Add(this.label3);
+            this.groupBox7.Controls.Add(this.label2);
+            this.groupBox7.Controls.Add(this.label1);
+            this.groupBox7.Controls.Add(this.viewScaleTextBox);
+            this.groupBox7.Location = new System.Drawing.Point(17, 226);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(267, 124);
+            this.groupBox7.TabIndex = 6;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Modifica i Valori della View";
+            // 
+            // visualStyleComboBox
+            // 
+            this.visualStyleComboBox.FormattingEnabled = true;
+            this.visualStyleComboBox.Location = new System.Drawing.Point(117, 89);
+            this.visualStyleComboBox.Name = "visualStyleComboBox";
+            this.visualStyleComboBox.Size = new System.Drawing.Size(132, 24);
+            this.visualStyleComboBox.TabIndex = 12;
+            this.visualStyleComboBox.LostFocus += new System.EventHandler(this.visualStyleComboBox_LostFocus);
+            // 
+            // detailLevelComboBox
+            // 
+            this.detailLevelComboBox.FormattingEnabled = true;
+            this.detailLevelComboBox.Location = new System.Drawing.Point(117, 58);
+            this.detailLevelComboBox.Name = "detailLevelComboBox";
+            this.detailLevelComboBox.Size = new System.Drawing.Size(132, 24);
+            this.detailLevelComboBox.TabIndex = 11;
+            this.detailLevelComboBox.LostFocus += new System.EventHandler(this.detailLevelComboBox_LostFocus);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 92);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(90, 17);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "- Visual Style";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(8, 61);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(91, 17);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "- Detail Level";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(8, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(84, 17);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "- Scale     1:";
+            // 
+            // viewScaleTextBox
+            // 
+            this.viewScaleTextBox.Location = new System.Drawing.Point(117, 29);
+            this.viewScaleTextBox.Name = "viewScaleTextBox";
+            this.viewScaleTextBox.Size = new System.Drawing.Size(72, 22);
+            this.viewScaleTextBox.TabIndex = 5;
+            this.viewScaleTextBox.Text = "30";
+            this.viewScaleTextBox.LostFocus += new System.EventHandler(this.viewScaleTextBox_LostFocus);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.openViewComboBox);
+            this.groupBox5.Location = new System.Drawing.Point(17, 162);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(267, 58);
+            this.groupBox5.TabIndex = 3;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Ultima Vista caricata";
+            // 
+            // openViewComboBox
+            // 
+            this.openViewComboBox.FormattingEnabled = true;
+            this.openViewComboBox.Location = new System.Drawing.Point(21, 21);
+            this.openViewComboBox.Name = "openViewComboBox";
+            this.openViewComboBox.Size = new System.Drawing.Size(228, 24);
+            this.openViewComboBox.TabIndex = 0;
             // 
             // groupBox4
             // 
@@ -172,86 +267,62 @@ namespace GetImages_2
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Ultimo File salvato";
             // 
-            // openViewTextBox
+            // groupBox8
             // 
-            this.openViewTextBox.Location = new System.Drawing.Point(21, 21);
-            this.openViewTextBox.Name = "openViewTextBox";
-            this.openViewTextBox.Size = new System.Drawing.Size(228, 22);
-            this.openViewTextBox.TabIndex = 5;
+            this.groupBox8.Controls.Add(this.groupBox9);
+            this.groupBox8.Controls.Add(this.exitButton);
+            this.groupBox8.Location = new System.Drawing.Point(355, 514);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(300, 119);
+            this.groupBox8.TabIndex = 10;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Utilities";
             // 
-            // groupBox5
+            // clearEditFile
             // 
-            this.groupBox5.Controls.Add(this.openViewTextBox);
-            this.groupBox5.Location = new System.Drawing.Point(17, 162);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(267, 58);
-            this.groupBox5.TabIndex = 3;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Ultima Vista caricata";
+            this.clearEditFile.Location = new System.Drawing.Point(32, 42);
+            this.clearEditFile.Name = "clearEditFile";
+            this.clearEditFile.Size = new System.Drawing.Size(93, 32);
+            this.clearEditFile.TabIndex = 1;
+            this.clearEditFile.Text = "Cancella";
+            this.clearEditFile.UseVisualStyleBackColor = true;
+            this.clearEditFile.Click += new System.EventHandler(this.clearEditFile_Click);
             // 
-            // groupBox7
+            // groupBox9
             // 
-            this.groupBox7.Controls.Add(this.viewScaleButton);
-            this.groupBox7.Controls.Add(this.label1);
-            this.groupBox7.Controls.Add(this.viewScaleTextBox);
-            this.groupBox7.Location = new System.Drawing.Point(17, 226);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(267, 58);
-            this.groupBox7.TabIndex = 6;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "Modifica il valore della View Scale";
-            // 
-            // viewScaleTextBox
-            // 
-            this.viewScaleTextBox.Location = new System.Drawing.Point(69, 21);
-            this.viewScaleTextBox.Name = "viewScaleTextBox";
-            this.viewScaleTextBox.Size = new System.Drawing.Size(99, 22);
-            this.viewScaleTextBox.TabIndex = 5;
-            this.viewScaleTextBox.Text = "30";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 17);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Scale 1:";
-            // 
-            // viewScaleButton
-            // 
-            this.viewScaleButton.Location = new System.Drawing.Point(174, 21);
-            this.viewScaleButton.Name = "viewScaleButton";
-            this.viewScaleButton.Size = new System.Drawing.Size(75, 23);
-            this.viewScaleButton.TabIndex = 7;
-            this.viewScaleButton.Text = "Modifica";
-            this.viewScaleButton.UseVisualStyleBackColor = true;
-            this.viewScaleButton.Click += new System.EventHandler(this.viewScaleButton_Click);
+            this.groupBox9.Controls.Add(this.clearEditFile);
+            this.groupBox9.Location = new System.Drawing.Point(14, 21);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(158, 85);
+            this.groupBox9.TabIndex = 1;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Cancella File modificati";
             // 
             // ModelessForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 584);
+            this.ClientSize = new System.Drawing.Size(696, 643);
+            this.Controls.Add(this.groupBox8);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.exitButton);
             this.MaximizeBox = false;
-            this.Name = "ModelessForm";
-            this.Text = "BOLD Get Image";
+            this.Name = "GetImages";
+            this.Text = "BOLD Get Images";
             this.Load += new System.EventHandler(this.ModelessForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            this.groupBox5.ResumeLayout(false);
-            this.groupBox5.PerformLayout();
-            this.groupBox7.ResumeLayout(false);
-            this.groupBox7.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -273,7 +344,13 @@ namespace GetImages_2
         private Label label1;
         private TextBox viewScaleTextBox;
         private GroupBox groupBox5;
-        private TextBox openViewTextBox;
-        private Button viewScaleButton;
+        private Label label3;
+        private Label label2;
+        private ComboBox visualStyleComboBox;
+        private ComboBox detailLevelComboBox;
+        private ComboBox openViewComboBox;
+        private GroupBox groupBox8;
+        private GroupBox groupBox9;
+        private Button clearEditFile;
     }
 }

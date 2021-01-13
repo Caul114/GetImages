@@ -35,8 +35,25 @@ namespace GetImages_2
         private RequestHandler m_Handler;
         private ExternalEvent m_ExEvent;
 
+        // List dei nomi delle View
+        private List<string> viewNames = new List<string>() { "Exterior", "Interior", "Left", "Right" };
+
         // Valore del TextBox della View Scale modificato 
         private int _scaleEdit;
+
+        // Lista dei valori del Livello di Dettaglio della View
+        private List<string> _detailLevels = new List<string>() { "Coarse", "Medium", "Fine" };
+
+        // Valore scelto della comboBox del Livello di Dettaglio della View
+        private string _detailLevel;
+        private int _detailLevelIndex = 1;
+
+        // Lista dei valori dello Stile di Visualizzazione della View
+        private List<string> _visualStyles = new List<string>() { "Wireframe", "Hidden Line", "Shaded", "Shaded with Edges", "Consistent Colors", "Realistic" };
+
+        // Valore scelto della comboBox dello Stile di Visualizzazione della View
+        private string _visualStyle;
+        private int _visualStyleIndex = 2;
 
         #region Class public property
         /// <summary>
@@ -45,6 +62,38 @@ namespace GetImages_2
         public int ScaleView
         {
             get { return _scaleEdit; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public string DetailLevel
+        {
+            get { return _detailLevel; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public int DetailLevelIndex
+        {
+            get { return _detailLevelIndex; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public string VisualStyle
+        {
+            get { return _visualStyle; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public int VisualStyleIndex
+        {
+            get { return _visualStyleIndex; }
         }
         #endregion
 
@@ -57,6 +106,22 @@ namespace GetImages_2
             InitializeComponent();
             m_Handler = handler;
             m_ExEvent = exEvent;
+
+            // Imposta la ComboBox del Detail Level
+            foreach (var item in _detailLevels)
+            {
+                detailLevelComboBox.Items.Add(item);
+            }
+            _detailLevel = _detailLevels[0];
+            detailLevelComboBox.Text = _detailLevel;
+
+            // Imposta la ComboBox del Visual style
+            foreach (var item in _visualStyles)
+            {
+                visualStyleComboBox.Items.Add(item);
+            }
+            _visualStyle = _visualStyles[1];
+            visualStyleComboBox.Text = _visualStyle;
         }
 
         /// <summary>
@@ -154,11 +219,28 @@ namespace GetImages_2
         private void getFilebutton_Click(object sender, EventArgs e)
         {
             MakeRequest(RequestId.File);
+            foreach (string name in viewNames)
+            {
+                openViewComboBox.Items.Add(name);
+            }
+            openViewComboBox.Text = " - ";
         }
 
         private void openViewButton_Click(object sender, EventArgs e)
         {
             MakeRequest(RequestId.View);
+        }
+
+        public void AssignValueComboBox()
+        {
+            openViewComboBox.Text = m_Handler.ViewShowed;
+        }
+
+        public void AssignValueComboBoxDefault()
+        {
+            openViewComboBox.Items.Clear();
+            openViewComboBox.Text = " - ";
+
         }
 
         private void exportViewbutton_Click(object sender, EventArgs e)
@@ -198,7 +280,6 @@ namespace GetImages_2
         public void LastFileOpened()
         {
             getFileTextBox.Text = m_Handler.PathName;
-            openViewTextBox.Text = "";
             exportViewTextBox.Text = "";
         }
 
@@ -208,7 +289,7 @@ namespace GetImages_2
         /// 
         public void LastViewOpened()
         {
-            openViewTextBox.Text = m_Handler.ViewShowed;
+            //openViewTextBox.Text = m_Handler.ViewShowed;
         }
 
         /// <summary>
@@ -220,11 +301,48 @@ namespace GetImages_2
             exportViewTextBox.Text = m_Handler.ExportedView;
         }
 
-
-        private void viewScaleButton_Click(object sender, EventArgs e)
+        /// <summary>
+        ///   Ritorna ogni modifica fatta nella TextBox della View Scale
+        /// </summary>
+        private void viewScaleTextBox_LostFocus(object sender, EventArgs e)
         {
             string text = viewScaleTextBox.Text;
-            _scaleEdit = Convert.ToInt32(text);
+            int scaleBase = m_Handler.Scale;
+            if (int.TryParse(text, out scaleBase))
+            {
+                _scaleEdit = Convert.ToInt32(text);
+            }
+            else
+            {
+                MessageBox.Show("Non hai inserito un valore corretto.\nInserisci un numero > 0.");
+            }
+        }
+
+        /// <summary>
+        ///   Ritorna ogni modifica fatta nella ComboBox Detail Level della View 
+        /// </summary>
+        private void detailLevelComboBox_LostFocus(object sender, EventArgs e)
+        {
+            _detailLevel = detailLevelComboBox.SelectedItem as string;
+            _detailLevelIndex = detailLevelComboBox.SelectedIndex + 1;
+        }
+
+        /// <summary>
+        ///   Ritorna ogni modifica fatta nella ComboBox Visual Style della View 
+        /// </summary>
+        private void visualStyleComboBox_LostFocus(object sender, EventArgs e)
+        {
+            _visualStyle = visualStyleComboBox.SelectedItem as string;
+            _visualStyleIndex = visualStyleComboBox.SelectedIndex + 1;
+        }
+
+        /// <summary>
+        ///   Cancella i file che sono stati modificati nelle operazioni precedenti
+        /// </summary>
+        private void clearEditFile_Click(object sender, EventArgs e)
+        {
+            // Cancella i File modificati
+            m_Handler.DeleteFileModified();
         }
     }  // class
 }

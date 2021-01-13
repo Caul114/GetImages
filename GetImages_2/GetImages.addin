@@ -2,19 +2,20 @@
 <RevitAddIns>  
 	<AddIn Type="Application">
 		<Name>GetImages</Name>
+		<Description>Programma che cattura le View attive e ele esporta in una cartella esterna</Description>
 		<Assembly>GetImages.dll</Assembly>
 		<FullClassName>GetImages_2.App</FullClassName>
 		<ClientId>D32AFE72-3D40-45B5-9F3F-73B7C01C1856</ClientId>
 		<VendorId>BOLDstd</VendorId>
 		<VendorDescription>BOLDstd, http://boldstd.it/ </VendorDescription>
 	</AddIn>
-	<AddIn Type="Command">
+	<!--<AddIn Type="Command">
 		<Text>Command GetImages</Text>
-		<Description>Some description for ModelessForm_ExternalEvent</Description>
+		<Description>Programma che cattura le View attive e ele esporta in una cartella esterna</Description>
 		<Assembly>GetImages.dll</Assembly>
 		<FullClassName>GetImages_2.Command</FullClassName>
 		<ClientId>3D1B587D-487D-47A4-8C87-1AEC93C55012</ClientId>
 		<VendorId>BOLDstd</VendorId>
 		<VendorDescription>BOLDstd, http://boldstd.it/ </VendorDescription>
-	</AddIn>	
+	</AddIn>-->	
 </RevitAddIns>
