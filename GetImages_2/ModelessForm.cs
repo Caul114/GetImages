@@ -38,24 +38,35 @@ namespace GetImages_2
         // List dei nomi delle View
         private List<string> viewNames = new List<string>() { "Exterior", "Interior", "Left", "Right" };
 
-        // Valore del TextBox della View Scale modificato 
+        // Valore del path attivo
+        private string _filePath;
+
+        // Valore dall'utente nella TextBox della View Scale modificato 
         private int _scaleEdit;
 
         // Lista dei valori del Livello di Dettaglio della View
         private List<string> _detailLevels = new List<string>() { "Coarse", "Medium", "Fine" };
 
-        // Valore scelto della comboBox del Livello di Dettaglio della View
-        private string _detailLevel;
+        // Valore scelto dall'utente nella comboBox del Livello di Dettaglio della View
+        private string _detailLevelEdit;
         private int _detailLevelIndex = 1;
 
         // Lista dei valori dello Stile di Visualizzazione della View
         private List<string> _visualStyles = new List<string>() { "Wireframe", "Hidden Line", "Shaded", "Shaded with Edges", "Consistent Colors", "Realistic" };
 
-        // Valore scelto della comboBox dello Stile di Visualizzazione della View
-        private string _visualStyle;
+        // Valore scelto dall'utente nella comboBox dello Stile di Visualizzazione della View
+        private string _visualStyleEdit;
         private int _visualStyleIndex = 2;
 
         #region Class public property
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public string FilePath
+        {
+            get { return _filePath; }
+        }
+
         /// <summary>
         /// Proprietà pubblica per accedere al valore della richiesta corrente
         /// </summary>
@@ -69,7 +80,7 @@ namespace GetImages_2
         /// </summary>
         public string DetailLevel
         {
-            get { return _detailLevel; }
+            get { return _detailLevelEdit; }
         }
 
         /// <summary>
@@ -85,7 +96,7 @@ namespace GetImages_2
         /// </summary>
         public string VisualStyle
         {
-            get { return _visualStyle; }
+            get { return _visualStyleEdit; }
         }
 
         /// <summary>
@@ -107,21 +118,24 @@ namespace GetImages_2
             m_Handler = handler;
             m_ExEvent = exEvent;
 
+            // Imposta il TextBox della View Scale
+            viewScaleTextBox.Text = Convert.ToString(m_Handler.Scale);
+
             // Imposta la ComboBox del Detail Level
             foreach (var item in _detailLevels)
             {
                 detailLevelComboBox.Items.Add(item);
             }
-            _detailLevel = _detailLevels[0];
-            detailLevelComboBox.Text = _detailLevel;
+            _detailLevelEdit = _detailLevels[0];
+            detailLevelComboBox.Text = _detailLevelEdit;
 
             // Imposta la ComboBox del Visual style
             foreach (var item in _visualStyles)
             {
                 visualStyleComboBox.Items.Add(item);
             }
-            _visualStyle = _visualStyles[1];
-            visualStyleComboBox.Text = _visualStyle;
+            _visualStyleEdit = _visualStyles[1];
+            visualStyleComboBox.Text = _visualStyleEdit;
         }
 
         /// <summary>
@@ -202,22 +216,11 @@ namespace GetImages_2
         {
         }
 
-        /// <summary>
-        ///   Exit - chiude la finestra di dialogo
-        /// </summary>
-        /// 
-        private void exitButton_Click_1(object sender, EventArgs e)
-        {
-            MakeRequest(RequestId.Esc);
-        }
 
-        public void CloseForm()
-        {
-            Close();
-        }
 
         private void getFilebutton_Click(object sender, EventArgs e)
         {
+            // Apro il nuovo file .rfa
             MakeRequest(RequestId.File);
             foreach (string name in viewNames)
             {
@@ -251,14 +254,14 @@ namespace GetImages_2
         public string GetPath()
         {
             var fileContent = string.Empty;
-            var filePath = string.Empty;
+            _filePath = string.Empty;
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
                     //Get the path of specified file
-                    filePath = openFileDialog1.FileName;
+                    _filePath = openFileDialog1.FileName;
                 }
                 catch (SecurityException ex)
                 {
@@ -270,7 +273,7 @@ namespace GetImages_2
             {
                 MessageBox.Show("Non hai selezionato nessun file.");
             }
-            return filePath;
+            return _filePath;
         }
 
         /// <summary>
@@ -302,9 +305,18 @@ namespace GetImages_2
         }
 
         /// <summary>
-        ///   Ritorna ogni modifica fatta nella TextBox della View Scale
+        ///   Comando LostFocus relativo alla TextBox della View Scale
         /// </summary>
         private void viewScaleTextBox_LostFocus(object sender, EventArgs e)
+        {
+            MakeRequest(RequestId.ViewScaleId);
+        }
+
+
+        /// <summary>
+        ///   Ritorna ogni modifica fatta nella TextBox della View Scale
+        /// </summary>
+        public void ViewScaleTextBox()
         {
             string text = viewScaleTextBox.Text;
             int scaleBase = m_Handler.Scale;
@@ -319,21 +331,39 @@ namespace GetImages_2
         }
 
         /// <summary>
-        ///   Ritorna ogni modifica fatta nella ComboBox Detail Level della View 
+        ///   Comando LostFocus relativo alla ComboBox Detail Level della View 
         /// </summary>
         private void detailLevelComboBox_LostFocus(object sender, EventArgs e)
         {
-            _detailLevel = detailLevelComboBox.SelectedItem as string;
+            MakeRequest(RequestId.DetailLevelId);
+        }
+
+        /// <summary>
+        ///   Ritorna ogni modifica fatta nella ComboBox Detail Level della View 
+        /// </summary>
+        public string DetailLevelComboBox()
+        {
+            _detailLevelEdit = detailLevelComboBox.SelectedItem as string;
             _detailLevelIndex = detailLevelComboBox.SelectedIndex + 1;
+            return _detailLevelEdit;
+        }
+
+        /// <summary>
+        ///   Comando LostFocus relativo alla ComboBox Visual Style della View 
+        /// </summary>
+        private void visualStyleComboBox_LostFocus(object sender, EventArgs e)
+        {
+            MakeRequest(RequestId.VisualStyleId);
         }
 
         /// <summary>
         ///   Ritorna ogni modifica fatta nella ComboBox Visual Style della View 
         /// </summary>
-        private void visualStyleComboBox_LostFocus(object sender, EventArgs e)
+        public string VisualStyleComboBox()
         {
-            _visualStyle = visualStyleComboBox.SelectedItem as string;
+            _visualStyleEdit = visualStyleComboBox.SelectedItem as string;
             _visualStyleIndex = visualStyleComboBox.SelectedIndex + 1;
+            return _visualStyleEdit;
         }
 
         /// <summary>
@@ -343,6 +373,21 @@ namespace GetImages_2
         {
             // Cancella i File modificati
             m_Handler.DeleteFileModified();
+            MessageBox.Show("Hai cancellato i file modificati.");
+        }
+
+        /// <summary>
+        ///   Exit - chiude la finestra di dialogo
+        /// </summary>
+        /// 
+        private void exitButton_Click_1(object sender, EventArgs e)
+        {
+            MakeRequest(RequestId.Esc);
+        }
+
+        public void CloseForm()
+        {
+            Close();
         }
     }  // class
 }

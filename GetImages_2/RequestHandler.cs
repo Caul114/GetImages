@@ -50,6 +50,9 @@ namespace GetImages_2
         // La stringa da riempire con la Path
         private static string _path = "";
 
+        // La stringa da riempire con la Path del file caricato precedentemente
+        private static string _pathOld = "";
+
         // Stabilisce il percorso di salvataggio delle imaagini
         private string _desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Images";
 
@@ -68,8 +71,15 @@ namespace GetImages_2
         // La stringa con il nome dell'ultimo file salvato
         private string _exportedView;
 
+
         // Valore contenuto nella View Scale
-        private int _scale = 30;
+        private int _scale = 20;
+        // Valore booleano che indica se il Detail Level e' stato modificato o meno
+        private string _detailLevelControl = "";
+        // Valore booleano che indica se il Visual Style e' stato modificato o meno
+        private string _visualStyleControl = "";
+        // Valore di controllo per il Salvataggio dei cambiamenti
+        private int _toSave = -1;
 
         // Valore booleano che mi dice se cancellare o meno un file
         private bool _clear = false;
@@ -166,7 +176,7 @@ namespace GetImages_2
                         }
                     case RequestId.File:
                         {
-                            // Cancella i file
+                            // Cancella i file modificati
                             DeleteFileModified();
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
@@ -181,6 +191,7 @@ namespace GetImages_2
                                 // Scrive nel TextBox l'ultima operazione effettuata
                                 modelessForm.LastFileOpened();
                             }
+                            _pathOld = _path;
                             break;
                         }
                     case RequestId.View:
@@ -193,20 +204,33 @@ namespace GetImages_2
                         {
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
+
                             // Richiama il valore della View Scale
-                            int value = modelessForm.ScaleView;
-                            if (value != _scale && value != 0)
+                            if(_scale != modelessForm.ScaleView)
                             {
-                                _scale = value;
+                                int valueScale1 = modelessForm.ScaleView;
+                                if (valueScale1 != _scale && valueScale1 != 0)
+                                {
+                                    _scale = valueScale1;
+                                }
+                                // Cambio la scala della vista attiva
+                                ChangeScale(uiapp, _path);
                             }
-                            // Cambio la scala della vista attiva
-                            ChangeScale(uiapp, _path);
-                            // Cambio il livello di dettaglio della vista attiva
-                            ChangeDetailLevel(uiapp, _path);
-                            // Cambio il livello di dettaglio della vista attiva
-                            ChangeVisualStyle(uiapp, _path);
-                            // Salvo le modifiche effettuate sulla vista
-                            SaveChanges(uiapp);
+                            if(_detailLevelControl != modelessForm.DetailLevel)
+                            {
+                                // Cambio il livello di dettaglio della vista attiva
+                                ChangeDetailLevel(uiapp, _path);
+                            }
+                            if(_visualStyleControl != modelessForm.VisualStyle)
+                            {
+                                // Cambio il livello di dettaglio della vista attiva
+                                ChangeVisualStyle(uiapp, _path);
+                            }
+                            if(_toSave > 0)
+                            {
+                                // Salvo le modifiche effettuate sulla vista
+                                SaveChanges(uiapp);
+                            }
                             // Esporta la View attiva 
                             ExportViewActive(uiapp);
                             // Mostra nel TextBox l'ultima view esportata
@@ -226,8 +250,44 @@ namespace GetImages_2
                             }
                             break;
                         }
-                    case RequestId.Scale:
-
+                    case RequestId.ViewScaleId:
+                        // Chiama la Form
+                        modelessForm = App.thisApp.RetriveForm();
+                        // Cattura il valore che viene dalla Form
+                        modelessForm.ViewScaleTextBox();
+                        // Richiama il valore della View Scale
+                        int valueScale2 = modelessForm.ScaleView;
+                        if (valueScale2 != _scale && valueScale2 != 0)
+                        {
+                            _scale = valueScale2;
+                        }
+                        // Cambio la scala della vista attiva
+                        ChangeScale(uiapp, _path);
+                        // Salvo le modifiche effettuate sulla vista
+                        SaveChanges(uiapp);
+                        _toSave = -1;
+                        break;
+                    case RequestId.DetailLevelId:
+                        // Chiama la Form
+                        modelessForm = App.thisApp.RetriveForm();
+                        // Cattura il valore che viene dalla Form
+                        _detailLevelControl = modelessForm.DetailLevelComboBox();
+                        // Cambio il livello di dettaglio della vista attiva
+                        ChangeDetailLevel(uiapp, _path);
+                        // Salvo le modifiche effettuate sulla vista
+                        SaveChanges(uiapp);
+                        _toSave = -1;
+                        break;
+                    case RequestId.VisualStyleId:
+                        // Chiama la Form
+                        modelessForm = App.thisApp.RetriveForm();
+                        // Cattura il valore che viene dalla Form
+                        _visualStyleControl = modelessForm.VisualStyleComboBox();
+                        // Cambio il livello di dettaglio della vista attiva
+                        ChangeVisualStyle(uiapp, _path);
+                        // Salvo le modifiche effettuate sulla vista
+                        SaveChanges(uiapp);
+                        _toSave = -1;
                         break;
                     default:
                         {
@@ -261,8 +321,20 @@ namespace GetImages_2
             }
             else
             {
-                // Apre il nuovo documento
-                uiapp.OpenAndActivateDocument(fullPath);
+                // Chiudo il file aperto precedentemente, se ha un percorso terminante con .rfa
+                if (_pathOld.Contains(".rfa"))
+                {
+                    // Apre il nuovo documento e chiude quello vecchio
+                    var newFile = fullPath;
+                    Document doc = uiapp.ActiveUIDocument.Document;
+                    uiapp.OpenAndActivateDocument(newFile);
+                    doc.Close(false);
+                }
+                else
+                {
+                    uiapp.OpenAndActivateDocument(fullPath);
+                }
+
             }
         }
 
@@ -271,6 +343,11 @@ namespace GetImages_2
         /// </summary>
         private void SaveChanges(UIApplication uiapp)
         {
+            if(_pathName == "")
+            {
+                _pathName = "ToDestroy";
+            }
+
             _filepath= _dirpath + "\\" + _pathName + ".rfa";
 
             // Salva le modifiche al file
@@ -304,9 +381,15 @@ namespace GetImages_2
 
                     foreach (string file in backUpFiles)
                     {
-                        File.Delete(file);
+                        try
+                        {
+                            File.Delete(file);
+                        }
+                        catch (Exception)
+                        {
+                            break;                            
+                        }
                     }
-
                 }
             }
         }
@@ -327,6 +410,8 @@ namespace GetImages_2
                 doc.ActiveView.get_Parameter(
                       BuiltInParameter.VIEW_SCALE)
                         .Set(_scale);
+
+                _toSave = 0;
 
                 tsx.Commit();
             }
@@ -352,6 +437,8 @@ namespace GetImages_2
                       BuiltInParameter.VIEW_DETAIL_LEVEL)
                         .Set(modelessForm.DetailLevelIndex);
 
+                _toSave = 1;
+
                 tsx.Commit();
             }
 
@@ -375,6 +462,8 @@ namespace GetImages_2
                 doc.ActiveView.get_Parameter(
                       BuiltInParameter.MODEL_GRAPHICS_STYLE)
                         .Set(modelessForm.VisualStyleIndex);
+
+                _toSave = 2;
 
                 tsx.Commit();
             }
@@ -526,13 +615,18 @@ namespace GetImages_2
                     // Esporta l'immagine viewActive con le specifiche salvate
                     doc.ExportImage(img);
 
-                    tx.RollBack();
+                    tx.Commit();
 
                     //// Cambia l'estensione dell'immagine in .png
                     //filepath = Path.ChangeExtension(filepath, "png");
 
                     // Mostra l'immagine salvata
                     //Process.Start(filepath);
+
+                    // Riporta i valori modificati nelle immagini al valore predefinito
+                    _scale = 20;
+                    _detailLevelControl = "";
+                    _visualStyleControl = "";
 
                     // Chiude il documento nel caso in cui abbia prodotto l'ultima immagine
                     if(name == "Right")

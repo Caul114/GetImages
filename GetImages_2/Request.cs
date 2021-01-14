@@ -50,9 +50,17 @@ namespace GetImages_2
         /// </summary>
         Esc = 4,
         /// <summary>
-        /// "Scale" request
+        /// "View Scale" request
         /// </summary>
-        Scale = 5,
+        ViewScaleId = 5,
+        /// <summary>
+        /// "Detail Level" request
+        /// </summary>
+        DetailLevelId = 6,
+        /// <summary>
+        /// "Visual Style" request
+        /// </summary>
+        VisualStyleId = 7,
     }
 
     /// <summary>
