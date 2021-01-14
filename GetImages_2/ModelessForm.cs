@@ -279,7 +279,7 @@ namespace GetImages_2
         /// 
         public void LastFileOpened()
         {
-            getFileTextBox.Text = m_Handler.PathName;
+            getFileTextBox.Text = m_Handler.FileNameWithoutExtension;
             exportViewTextBox.Text = "";
         }
 

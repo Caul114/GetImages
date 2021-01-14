@@ -90,7 +90,7 @@ namespace GetImages_2
             // openFileDialog1
             // 
             this.openFileDialog1.Filter = "rfa files (*.rfa)|*.rfa|All files (*.*)|*.*";
-            this.openFileDialog1.InitialDirectory = "C:\\Users\\Bold\\Documents\\GetImages\\Files da caricare";
+            this.openFileDialog1.InitialDirectory = "C:\\Users\\Bold\\Documents\\Bold Software\\GetImages\\Files da caricare";
             // 
             // openViewButton
             // 

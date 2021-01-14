@@ -54,7 +54,7 @@ namespace GetImages_2
         private string _desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Images";
 
         // Ricava il nome del file da salvare
-        private static string _pathName = Path.GetFileNameWithoutExtension(_path);
+        private static string _pathName = "";
 
         // Percorso temporaneo della cartella dei file salvati
         private static string _dirpath = @"C:\Users\Bold\Documents\Bold Software\GetImages\File modificati";
@@ -91,6 +91,14 @@ namespace GetImages_2
         public String PathName
         {
             get { return _path; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public String FileNameWithoutExtension
+        {
+            get { return _pathName; }
         }
 
         /// <summary>
@@ -164,8 +172,10 @@ namespace GetImages_2
                             modelessForm = App.thisApp.RetriveForm();
                             // Ottiene il Path del file da importare
                             _path = modelessForm.GetPath();
+                            // Definisce il nome del path
+                            _pathName = Path.GetFileNameWithoutExtension(_path);
                             // Apre il file selezionato
-                            if(_path != "")
+                            if (_path != "")
                             {
                                 OpenFile(uiapp, _path);
                                 // Scrive nel TextBox l'ultima operazione effettuata
@@ -181,8 +191,6 @@ namespace GetImages_2
                         }
                     case RequestId.Export:
                         {
-                            // Definisce il nome del path
-                            _pathName = Path.GetFileNameWithoutExtension(_path);
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
                             // Richiama il valore della View Scale
