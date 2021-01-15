@@ -222,17 +222,29 @@ namespace GetImages_2
         {
             // Apro il nuovo file .rfa
             MakeRequest(RequestId.File);
-            foreach (string name in viewNames)
-            {
-                openViewComboBox.Items.Add(name);
-            }
-            openViewComboBox.Text = " - ";
         }
 
         private void openViewButton_Click(object sender, EventArgs e)
         {
             MakeRequest(RequestId.View);
         }
+
+        /// <summary>
+        ///   Metodo che sceglie l'elemento attivo nella ComboBox e mostra la View relativa
+        /// </summary>
+        /// 
+        private void openViewComboBox_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            MakeRequest(RequestId.SingleView);
+        }
+
+        public string ViewStringRequest()
+        {
+            // Ottiene la stringa selezionata nella ComboBox
+            string selectedItem = (string)openViewComboBox.SelectedItem;
+            return selectedItem;
+        }
+
 
         public void AssignValueComboBox()
         {
@@ -242,8 +254,11 @@ namespace GetImages_2
         public void AssignValueComboBoxDefault()
         {
             openViewComboBox.Items.Clear();
+            foreach (string name in viewNames)
+            {
+                openViewComboBox.Items.Add(name);
+            }
             openViewComboBox.Text = " - ";
-
         }
 
         private void exportViewbutton_Click(object sender, EventArgs e)

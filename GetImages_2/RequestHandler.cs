@@ -68,6 +68,12 @@ namespace GetImages_2
         // La stringa che memorizza l'ultima view vista
         private string _imageViewed = "";
 
+        // La stringa che memorizza l'ultima view richiesta
+        private string _imageRequest = "";
+
+        // Il avalore booleano che decide se la richiesta per la view è singla o multipla
+        private bool _single = false;
+
         // La stringa con il nome dell'ultimo file salvato
         private string _exportedView;
 
@@ -180,6 +186,8 @@ namespace GetImages_2
                             DeleteFileModified(uiapp);
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
+                            // Assegno alla comboBox della View il valore predefinito
+                            modelessForm.AssignValueComboBoxDefault();
                             // Ottiene il Path del file da importare
                             _path = modelessForm.GetPath();
                             // Definisce il nome del path
@@ -198,6 +206,16 @@ namespace GetImages_2
                         {
                             // Apro la vista selezionata
                             OpenView(uiapp);
+                            break;
+                        }
+                    case RequestId.SingleView:
+                        {
+                            // Chiama la Form
+                            modelessForm = App.thisApp.RetriveForm();
+                            // Assegno alla comboBox della View il valore predefinito
+                            _imageRequest = modelessForm.ViewStringRequest();
+                            // Apro la vista selezionata
+                            SingleOpenView(uiapp, _imageRequest);
                             break;
                         }
                     case RequestId.Export:
@@ -247,19 +265,6 @@ namespace GetImages_2
                             }
                             break;
                         }
-                    case RequestId.Esc:
-                        {
-                            // Chiama la Form
-                            modelessForm = App.thisApp.RetriveForm();
-                            // Chiude la Form
-                            modelessForm.CloseForm();
-                            // Chiude il documento .rfa ancora aperto
-                            if(_path.Contains(".rfa"))
-                            {
-                                CloseDocByCommand(uiapp);
-                            }
-                            break;
-                        }
                     case RequestId.ViewScaleId:
                         // Chiama la Form
                         modelessForm = App.thisApp.RetriveForm();
@@ -303,6 +308,19 @@ namespace GetImages_2
                         DeleteFileModified(uiapp);
                         MessageBox.Show("Hai cancellato i file modificati.");
                         break;
+                    case RequestId.Esc:
+                        {
+                            // Chiama la Form
+                            modelessForm = App.thisApp.RetriveForm();
+                            // Chiude la Form
+                            modelessForm.CloseForm();
+                            // Chiude il documento .rfa ancora aperto
+                            if (_path.Contains(".rfa"))
+                            {
+                                CloseDocByCommand(uiapp);
+                            }
+                            break;
+                        }
                     default:
                         {
                             // Una sorta di avviso qui dovrebbe informarci di una richiesta imprevista
@@ -335,6 +353,10 @@ namespace GetImages_2
             }
             else
             {
+                if(uiapp.ActiveUIDocument == null)
+                {
+                    uiapp.OpenAndActivateDocument(fullPath);
+                }
                 if(File.Exists(_pathOld) && _pathOld == fullPath)   // Se il file è lo stesso, lo salva con un nuovo percorso, lo chiude e apre il nuovo
                 {
                     // Cattura il vecchio documento, salva con nome il vecchio, apre il nuovo, chiude quello vecchio                    
@@ -349,7 +371,6 @@ namespace GetImages_2
                     uiapp.OpenAndActivateDocument(newFile);
                     // chiude il vecchio
                     doc.Close(false);
-
                 }
                 else if (File.Exists(_pathOld) && _pathOld.Contains(".rfa"))   // Chiude il file aperto precedentemente, se ha un percorso terminante con .rfa
 
@@ -520,6 +541,11 @@ namespace GetImages_2
             FilteredElementCollector viewCollector = new FilteredElementCollector(doc);
             viewCollector.OfClass(typeof(Autodesk.Revit.DB.View));
 
+            //string[] elevations = new string[] { "Exterior", "Interior", "Left", "Right" };
+
+            // Cambia il valore booleano per attestare che la richiesta della view è multipla
+            _single = false;
+
             // Verifico se il file si apre su Exterior e nel caso salto direttamente all'esportazione dell'immagine
             string nameViewActive = viewActive.Name;
             if (nameViewActive == "Exterior" && _imageViewed == "")
@@ -536,7 +562,6 @@ namespace GetImages_2
             foreach (Autodesk.Revit.DB.View viewElement in viewCollector)
             {
                 var name = viewElement.Name;                
-                //string[] elevations = new string[] { "Exterior", "Interior", "Left", "Right" };
 
                 switch(name)
                 {
@@ -594,6 +619,39 @@ namespace GetImages_2
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Metodo per l'apertura della VIEW SCELTA
+        /// </summary>
+        public void SingleOpenView(UIApplication uiapp, string viewName)
+        {
+            UIDocument uidoc = uiapp.ActiveUIDocument;
+            Document doc = uidoc.Document;
+
+            FilteredElementCollector viewCollector = new FilteredElementCollector(doc);
+            viewCollector.OfClass(typeof(Autodesk.Revit.DB.View));
+
+            //string[] elevations = new string[] { "Exterior", "Interior", "Left", "Right" };
+
+            // Cambia il valore booleano per attestare che la richiesta della view è singola
+            _single = true;
+
+            foreach (Autodesk.Revit.DB.View viewElement in viewCollector)
+            {
+                if (viewElement.Name == viewName)
+                {
+                    uidoc.RequestViewChange(viewElement);
+                    _imageViewed = viewElement.Name;
+                    // Chiama la Form
+                    modelessForm = App.thisApp.RetriveForm();
+                    // Mostra nella combobox la vista attiva
+                    modelessForm.AssignValueComboBox();
+                    // Salvo ed esco
+                    uidoc.SaveAndClose();
+                } 
+            }
+
         }
 
         /// <summary>
@@ -661,7 +719,7 @@ namespace GetImages_2
                     _visualStyleControl = "";
 
                     // Chiude il documento nel caso in cui abbia prodotto l'ultima immagine
-                    if(name == "Right")
+                    if(name == "Right" && _single == false)
                     {
                         MessageBox.Show("Hai salvato correttamente le 4 Viste del File");
                         _imageViewed = "";
@@ -679,16 +737,19 @@ namespace GetImages_2
         /// <param name="uiapp">L'oggetto Applicazione di Revit</param>
         private void CloseDocByCommand(UIApplication uiapp)
         {
-            Document doc = uiapp.ActiveUIDocument.Document;
+            if(uiapp.ActiveUIDocument.Document != null)
+            {
+                Document doc = uiapp.ActiveUIDocument.Document;
 
-            // Dà il comando di chiusura del documento aperto
-            RevitCommandId closeDoc
-              = RevitCommandId.LookupPostableCommandId(
-                PostableCommand.Close);
-            uiapp.PostCommand(closeDoc);
+                // Dà il comando di chiusura del documento aperto
+                RevitCommandId closeDoc
+                  = RevitCommandId.LookupPostableCommandId(
+                    PostableCommand.Close);
+                uiapp.PostCommand(closeDoc);
 
-            // Assegno alla comboBox della View il valore predefinito
-            modelessForm.AssignValueComboBoxDefault();
+                // Assegno alla comboBox della View il valore predefinito
+                modelessForm.AssignValueComboBoxDefault();
+            }
         }
 
         /// <summary>

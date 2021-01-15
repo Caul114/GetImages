@@ -54,8 +54,8 @@ namespace GetImages_2
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.clearEditFile = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.clearEditFile = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -225,7 +225,7 @@ namespace GetImages_2
             this.viewScaleTextBox.Name = "viewScaleTextBox";
             this.viewScaleTextBox.Size = new System.Drawing.Size(72, 22);
             this.viewScaleTextBox.TabIndex = 5;
-            this.viewScaleTextBox.Text = "30";
+            this.viewScaleTextBox.Text = "20";
             this.viewScaleTextBox.LostFocus += new System.EventHandler(this.viewScaleTextBox_LostFocus);
             // 
             // groupBox5
@@ -245,6 +245,7 @@ namespace GetImages_2
             this.openViewComboBox.Name = "openViewComboBox";
             this.openViewComboBox.Size = new System.Drawing.Size(228, 24);
             this.openViewComboBox.TabIndex = 0;
+            this.openViewComboBox.SelectionChangeCommitted += new System.EventHandler(openViewComboBox_SelectionChangeCommitted);
             // 
             // groupBox4
             // 
@@ -278,16 +279,6 @@ namespace GetImages_2
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Utilities";
             // 
-            // clearEditFile
-            // 
-            this.clearEditFile.Location = new System.Drawing.Point(32, 42);
-            this.clearEditFile.Name = "clearEditFile";
-            this.clearEditFile.Size = new System.Drawing.Size(93, 32);
-            this.clearEditFile.TabIndex = 1;
-            this.clearEditFile.Text = "Cancella";
-            this.clearEditFile.UseVisualStyleBackColor = true;
-            this.clearEditFile.Click += new System.EventHandler(this.clearEditFile_Click);
-            // 
             // groupBox9
             // 
             this.groupBox9.Controls.Add(this.clearEditFile);
@@ -297,6 +288,16 @@ namespace GetImages_2
             this.groupBox9.TabIndex = 1;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Cancella File modificati";
+            // 
+            // clearEditFile
+            // 
+            this.clearEditFile.Location = new System.Drawing.Point(32, 42);
+            this.clearEditFile.Name = "clearEditFile";
+            this.clearEditFile.Size = new System.Drawing.Size(93, 32);
+            this.clearEditFile.TabIndex = 1;
+            this.clearEditFile.Text = "Cancella";
+            this.clearEditFile.UseVisualStyleBackColor = true;
+            this.clearEditFile.Click += new System.EventHandler(this.clearEditFile_Click);
             // 
             // ModelessForm
             // 
@@ -308,7 +309,7 @@ namespace GetImages_2
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
-            this.Name = "GetImages";
+            this.Name = "ModelessForm";
             this.Text = "BOLD Get Images";
             this.Load += new System.EventHandler(this.ModelessForm_Load);
             this.groupBox1.ResumeLayout(false);

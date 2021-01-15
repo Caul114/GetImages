@@ -42,29 +42,33 @@ namespace GetImages_2
         /// </summary>
         View = 2,
         /// <summary>
+        /// "Single View" request
+        /// </summary>
+        SingleView = 4,
+        /// <summary>
         /// "Export" request
         /// </summary>
-        Export = 3,
-        /// <summary>
-        /// "Exit" request
-        /// </summary>
-        Esc = 4,
+        Export = 5,
         /// <summary>
         /// "View Scale" request
         /// </summary>
-        ViewScaleId = 5,
+        ViewScaleId = 6,
         /// <summary>
         /// "Detail Level" request
         /// </summary>
-        DetailLevelId = 6,
+        DetailLevelId = 7,
         /// <summary>
         /// "Visual Style" request
         /// </summary>
-        VisualStyleId = 7,
+        VisualStyleId = 8,
         /// <summary>
         /// "Delete" request
         /// </summary>
-        Delete = 8,
+        Delete = 9,
+        /// <summary>
+        /// "Exit" request
+        /// </summary>
+        Esc = 10,
     }
 
     /// <summary>
