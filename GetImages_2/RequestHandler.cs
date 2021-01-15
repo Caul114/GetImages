@@ -177,7 +177,7 @@ namespace GetImages_2
                     case RequestId.File:
                         {
                             // Cancella i file modificati
-                            DeleteFileModified();
+                            DeleteFileModified(uiapp);
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
                             // Ottiene il Path del file da importare
@@ -202,39 +202,49 @@ namespace GetImages_2
                         }
                     case RequestId.Export:
                         {
-                            // Chiama la Form
-                            modelessForm = App.thisApp.RetriveForm();
+                            // Recupera la view attiva
+                            UIDocument uidoc = uiapp.ActiveUIDocument;
+                            Document doc = uidoc.Document;                            
+                            Autodesk.Revit.DB.View viewActive = doc.ActiveView;
+                            var name = viewActive.Name;
 
-                            // Richiama il valore della View Scale
-                            if(_scale != modelessForm.ScaleView)
+                            // Esegue l'esportazione se la view attiva è una di queste 
+                            if (name == "Exterior" || name == "Interior" || name == "Right" || name == "Left")
                             {
-                                int valueScale1 = modelessForm.ScaleView;
-                                if (valueScale1 != _scale && valueScale1 != 0)
+                                // Chiama la Form
+                                modelessForm = App.thisApp.RetriveForm();
+
+                                // Richiama il valore della View Scale
+                                if (_scale != modelessForm.ScaleView)
                                 {
-                                    _scale = valueScale1;
+                                    int valueScale1 = modelessForm.ScaleView;
+                                    if (valueScale1 != _scale && valueScale1 != 0)
+                                    {
+                                        _scale = valueScale1;
+                                    }
+                                    // Cambio la scala della vista attiva
+                                    ChangeScale(uiapp, _path);
                                 }
-                                // Cambio la scala della vista attiva
-                                ChangeScale(uiapp, _path);
+                                if (_detailLevelControl != modelessForm.DetailLevel)
+                                {
+                                    // Cambio il livello di dettaglio della vista attiva
+                                    ChangeDetailLevel(uiapp, _path);
+                                }
+                                if (_visualStyleControl != modelessForm.VisualStyle)
+                                {
+                                    // Cambio il livello di dettaglio della vista attiva
+                                    ChangeVisualStyle(uiapp, _path);
+                                }
+                                if (_toSave > 0)
+                                {
+                                    // Salvo le modifiche effettuate sulla vista
+                                    SaveChanges(uiapp);
+                                }
+                                // Esporta la View attiva 
+                                ExportViewActive(uiapp, viewActive);
+                                // Mostra nel TextBox l'ultima view esportata
+                                modelessForm.LastViewExported();
                             }
-                            if(_detailLevelControl != modelessForm.DetailLevel)
-                            {
-                                // Cambio il livello di dettaglio della vista attiva
-                                ChangeDetailLevel(uiapp, _path);
-                            }
-                            if(_visualStyleControl != modelessForm.VisualStyle)
-                            {
-                                // Cambio il livello di dettaglio della vista attiva
-                                ChangeVisualStyle(uiapp, _path);
-                            }
-                            if(_toSave > 0)
-                            {
-                                // Salvo le modifiche effettuate sulla vista
-                                SaveChanges(uiapp);
-                            }
-                            // Esporta la View attiva 
-                            ExportViewActive(uiapp);
-                            // Mostra nel TextBox l'ultima view esportata
-                            modelessForm.LastViewExported();
                             break;
                         }
                     case RequestId.Esc:
@@ -289,6 +299,10 @@ namespace GetImages_2
                         SaveChanges(uiapp);
                         _toSave = -1;
                         break;
+                    case RequestId.Delete:
+                        DeleteFileModified(uiapp);
+                        MessageBox.Show("Hai cancellato i file modificati.");
+                        break;
                     default:
                         {
                             // Una sorta di avviso qui dovrebbe informarci di una richiesta imprevista
@@ -321,11 +335,27 @@ namespace GetImages_2
             }
             else
             {
-                // Chiudo il file aperto precedentemente, se ha un percorso terminante con .rfa
-                if (_pathOld.Contains(".rfa"))
+                if(File.Exists(_pathOld) && _pathOld == fullPath)   // Se il file è lo stesso, lo salva con un nuovo percorso, lo chiude e apre il nuovo
+                {
+                    // Cattura il vecchio documento, salva con nome il vecchio, apre il nuovo, chiude quello vecchio                    
+                    string newFile = fullPath;
+                    // Cattura il vecchio
+                    Document doc = uiapp.ActiveUIDocument.Document;
+                    // Salva il vecchio
+                    string pathName = Path.GetFileName(_pathOld);
+                    string tempPath = _dirpath + "\\" + pathName;
+                    doc.SaveAs(tempPath);
+                    // Apre il nuovo
+                    uiapp.OpenAndActivateDocument(newFile);
+                    // chiude il vecchio
+                    doc.Close(false);
+
+                }
+                else if (File.Exists(_pathOld) && _pathOld.Contains(".rfa"))   // Chiude il file aperto precedentemente, se ha un percorso terminante con .rfa
+
                 {
                     // Apre il nuovo documento e chiude quello vecchio
-                    var newFile = fullPath;
+                    string newFile = fullPath;
                     Document doc = uiapp.ActiveUIDocument.Document;
                     uiapp.OpenAndActivateDocument(newFile);
                     doc.Close(false);
@@ -364,7 +394,7 @@ namespace GetImages_2
         /// <summary>
         /// Metodo che cancella il file in un certo percorso
         /// </summary>
-        private void DeleteFile(string dirPath)
+        private void DeleteFile(UIApplication uiapp, string dirPath)
         {
             if (Directory.Exists(dirPath))
             {
@@ -387,7 +417,13 @@ namespace GetImages_2
                         }
                         catch (Exception)
                         {
-                            break;                            
+                            string placeholderFile = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Utilities\Example.rvt";
+                            Document doc = uiapp.ActiveUIDocument.Document;
+                            UIDocument docPlaceholder = uiapp.OpenAndActivateDocument(placeholderFile);
+                            doc.Close(false);
+                            File.Delete(file);
+                            //var uidoc = uiapp.OpenAndActivateDocument(file);
+                            docPlaceholder.Document.Close(false);
                         }
                     }
                 }
@@ -563,14 +599,10 @@ namespace GetImages_2
         /// <summary>
         /// Metodo per l'esportazione della view attiva
         /// </summary>
-        private void ExportViewActive(UIApplication uiapp)
+        private void ExportViewActive(UIApplication uiapp, Autodesk.Revit.DB.View viewActive)
         {
-            UIDocument uidoc = uiapp.ActiveUIDocument;
-            Document doc = uidoc.Document;
-
-            // Recupera la view attiva
-            Autodesk.Revit.DB.View viewActive = doc.ActiveView;
-
+            Document doc = uiapp.ActiveUIDocument.Document;
+            // Estrae il nome della View
             var name = viewActive.Name;
 
             // Esporta il file immagine a seconda del nome della view
@@ -665,14 +697,14 @@ namespace GetImages_2
         /// <remarks>
         /// </remarks>
         /// <param name="uiapp">L'oggetto Applicazione di Revit</param>
-        public void DeleteFileModified()
+        public void DeleteFileModified(UIApplication uiapp)
         {
             //_clear = true;
 
             // Cancella o meno gli eventuali file modificati
             if (!_clear)
             {
-                DeleteFile(_dirpath);
+                DeleteFile(uiapp, _dirpath);
             }
         }
 

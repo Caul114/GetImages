@@ -61,6 +61,10 @@ namespace GetImages_2
         /// "Visual Style" request
         /// </summary>
         VisualStyleId = 7,
+        /// <summary>
+        /// "Delete" request
+        /// </summary>
+        Delete = 8,
     }
 
     /// <summary>

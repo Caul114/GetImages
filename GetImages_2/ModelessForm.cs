@@ -372,8 +372,7 @@ namespace GetImages_2
         private void clearEditFile_Click(object sender, EventArgs e)
         {
             // Cancella i File modificati
-            m_Handler.DeleteFileModified();
-            MessageBox.Show("Hai cancellato i file modificati.");
+            MakeRequest(RequestId.Delete);
         }
 
         /// <summary>
