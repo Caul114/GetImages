@@ -51,7 +51,7 @@ namespace GetImages_2
                 // ToolTip mostrato
                 button.ToolTip = "App base";
                 // Icona del Button
-                Uri uriImage = new Uri(@"C:\DatiLDB\Progetti_REVIT\15.GetImages_from_Revit\GetImages_2\GetImages_2\Resources\revit_small.png");
+                Uri uriImage = new Uri(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Icon\revit_small.png");
                 BitmapImage image = new BitmapImage(uriImage);
                 button.LargeImage = image;
             };
@@ -146,7 +146,7 @@ namespace GetImages_2
         public RibbonPanel RibbonPanel(UIControlledApplication uiapp)
         {
             // Nome del Tab
-            string tab = "Bold";
+            string tab = "BOLD";
 
             // Dichiara e inizializza un RibbonPanel vuoto
             RibbonPanel ribbonPanel = null;
