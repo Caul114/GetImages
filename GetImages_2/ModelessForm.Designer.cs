@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -69,47 +70,51 @@ namespace GetImages_2
             // 
             // exitButton
             // 
+            this.exitButton.BackColor = System.Drawing.SystemColors.ControlDark;
             this.exitButton.Location = new System.Drawing.Point(187, 63);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(93, 32);
             this.exitButton.TabIndex = 0;
             this.exitButton.Text = "Exit";
-            this.exitButton.UseVisualStyleBackColor = true;
+            this.exitButton.UseVisualStyleBackColor = false;
             this.exitButton.Click += new System.EventHandler(this.exitButton_Click_1);
             // 
             // getFilebutton
             // 
+            this.getFilebutton.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.getFilebutton.Location = new System.Drawing.Point(197, 20);
             this.getFilebutton.Name = "getFilebutton";
             this.getFilebutton.Size = new System.Drawing.Size(228, 121);
             this.getFilebutton.TabIndex = 1;
             this.getFilebutton.Text = "Scegli il File";
-            this.getFilebutton.UseVisualStyleBackColor = true;
+            this.getFilebutton.UseVisualStyleBackColor = false;
             this.getFilebutton.Click += new System.EventHandler(this.getFilebutton_Click);
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "rfa files (*.rfa)|*.rfa|All files (*.*)|*.*";
+            this.openFileDialog1.Filter = "Rfa files (*.rfa)|*.rfa|All files (*.*)|*.*";
             this.openFileDialog1.InitialDirectory = "C:\\Users\\Bold\\Documents\\Bold Software\\GetImages\\Files da caricare";
             // 
             // openViewButton
             // 
+            this.openViewButton.BackColor = System.Drawing.Color.Yellow;
             this.openViewButton.Location = new System.Drawing.Point(38, 31);
             this.openViewButton.Name = "openViewButton";
             this.openViewButton.Size = new System.Drawing.Size(228, 121);
             this.openViewButton.TabIndex = 2;
             this.openViewButton.Text = "Apri una Vista";
-            this.openViewButton.UseVisualStyleBackColor = true;
+            this.openViewButton.UseVisualStyleBackColor = false;
             this.openViewButton.Click += new System.EventHandler(this.openViewButton_Click);
             // 
             // exportViewbutton
             // 
+            this.exportViewbutton.BackColor = System.Drawing.Color.SpringGreen;
             this.exportViewbutton.Location = new System.Drawing.Point(33, 31);
             this.exportViewbutton.Name = "exportViewbutton";
             this.exportViewbutton.Size = new System.Drawing.Size(228, 121);
             this.exportViewbutton.TabIndex = 3;
             this.exportViewbutton.Text = "Esporta l\'immagine";
-            this.exportViewbutton.UseVisualStyleBackColor = true;
+            this.exportViewbutton.UseVisualStyleBackColor = false;
             this.exportViewbutton.Click += new System.EventHandler(this.exportViewbutton_Click);
             // 
             // getFileTextBox
@@ -245,7 +250,7 @@ namespace GetImages_2
             this.openViewComboBox.Name = "openViewComboBox";
             this.openViewComboBox.Size = new System.Drawing.Size(228, 24);
             this.openViewComboBox.TabIndex = 0;
-            this.openViewComboBox.SelectionChangeCommitted += new System.EventHandler(openViewComboBox_SelectionChangeCommitted);
+            this.openViewComboBox.SelectionChangeCommitted += new System.EventHandler(this.openViewComboBox_SelectionChangeCommitted);
             // 
             // groupBox4
             // 
@@ -291,12 +296,13 @@ namespace GetImages_2
             // 
             // clearEditFile
             // 
+            this.clearEditFile.BackColor = System.Drawing.Color.Tomato;
             this.clearEditFile.Location = new System.Drawing.Point(32, 42);
             this.clearEditFile.Name = "clearEditFile";
             this.clearEditFile.Size = new System.Drawing.Size(93, 32);
             this.clearEditFile.TabIndex = 1;
             this.clearEditFile.Text = "Cancella";
-            this.clearEditFile.UseVisualStyleBackColor = true;
+            this.clearEditFile.UseVisualStyleBackColor = false;
             this.clearEditFile.Click += new System.EventHandler(this.clearEditFile_Click);
             // 
             // ModelessForm

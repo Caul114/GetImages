@@ -60,7 +60,7 @@ namespace GetImages_2
         private static string _pathName = "";
 
         // Percorso temporaneo della cartella dei file salvati
-        private static string _dirpath = @"C:\Users\Bold\Documents\Bold Software\GetImages\File modificati";
+        private static string _dirpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\File modificati";
 
         // Percorso temporaneo dei file salvati
         private static string _filepath = "";
@@ -357,7 +357,7 @@ namespace GetImages_2
                 {
                     uiapp.OpenAndActivateDocument(fullPath);
                 }
-                if(File.Exists(_pathOld) && _pathOld == fullPath)   // Se il file è lo stesso, lo salva con un nuovo percorso, lo chiude e apre il nuovo
+                if(File.Exists(_pathOld) && _pathOld == fullPath && uiapp.ActiveUIDocument.Document.PathName.Contains(".rfa"))   // Se il file è lo stesso ed e .rfa, lo salva con un nuovo percorso, lo chiude e apre il nuovo
                 {
                     // Cattura il vecchio documento, salva con nome il vecchio, apre il nuovo, chiude quello vecchio                    
                     string newFile = fullPath;
@@ -372,8 +372,7 @@ namespace GetImages_2
                     // chiude il vecchio
                     doc.Close(false);
                 }
-                else if (File.Exists(_pathOld) && _pathOld.Contains(".rfa"))   // Chiude il file aperto precedentemente, se ha un percorso terminante con .rfa
-
+                else if (File.Exists(_pathOld) && uiapp.ActiveUIDocument.Document.PathName.Contains(".rfa"))   // Chiude il file aperto precedentemente, se ha un percorso terminante con .rfa
                 {
                     // Apre il nuovo documento e chiude quello vecchio
                     string newFile = fullPath;
@@ -385,7 +384,6 @@ namespace GetImages_2
                 {
                     uiapp.OpenAndActivateDocument(fullPath);
                 }
-
             }
         }
 
