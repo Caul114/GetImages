@@ -53,8 +53,8 @@ namespace GetImages_2
         // La stringa da riempire con la Path del file caricato precedentemente
         private static string _pathOld = "";
 
-        // Stabilisce il percorso di salvataggio delle imaagini
-        private string _desktop_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Images";
+        // Stabilisce il percorso di salvataggio delle immagini
+        private string _images_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Images";
 
         // Ricava il nome del file da salvare
         private static string _pathName = "";
@@ -131,6 +131,14 @@ namespace GetImages_2
         public String ExportedView
         {
             get { return _exportedView; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public String ImagesPath
+        {
+            get { return _images_path; }
         }
 
         /// <summary>
@@ -673,16 +681,16 @@ namespace GetImages_2
                     switch(name)
                     {
                         case "Exterior":
-                            filepath = Path.Combine(_desktop_path, _pathName + "_F.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_F.png");
                             break;
                         case "Interior":
-                            filepath = Path.Combine(_desktop_path, _pathName + "_P.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_P.png");
                             break;
                         case "Right":
-                            filepath = Path.Combine(_desktop_path, _pathName + "_R.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_R.png");
                             break;
                         case "Left":
-                            filepath = Path.Combine(_desktop_path, _pathName + "_L.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_L.png");
                             break;
                     }
 

@@ -41,6 +41,9 @@ namespace GetImages_2
         // Valore del path attivo
         private string _filePath;
 
+        // Percorso della cartella Images
+        private string _imagesPath;
+
         // Valore dall'utente nella TextBox della View Scale modificato 
         private int _scaleEdit;
 
@@ -117,6 +120,9 @@ namespace GetImages_2
             InitializeComponent();
             m_Handler = handler;
             m_ExEvent = exEvent;
+
+            // Cattura il apth della cartella Images in cui queste vengono salvate
+            _imagesPath = m_Handler.ImagesPath;
 
             // Imposta il TextBox della View Scale
             viewScaleTextBox.Text = Convert.ToString(m_Handler.Scale);
@@ -402,6 +408,25 @@ namespace GetImages_2
         public void CloseForm()
         {
             Close();
+        }
+
+        private void openImagesFolderButton_Click(object sender, EventArgs e)
+        {
+            if (Directory.Exists(_imagesPath))
+            {
+                Process.Start(_imagesPath);
+            }
+            else
+            {
+                // Apri il folderBrowserDialog
+                DialogResult result = folderBrowserDialog1.ShowDialog();
+                if(result == DialogResult.OK)
+                {
+                    _imagesPath = folderBrowserDialog1.SelectedPath;
+                    Process.Start(_imagesPath);
+                }
+            }
+
         }
     }  // class
 }
