@@ -55,10 +55,10 @@ namespace GetImages_2
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.groupBox9 = new System.Windows.Forms.GroupBox();
-            this.clearEditFile = new System.Windows.Forms.Button();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.openImagesFolderButton = new System.Windows.Forms.Button();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.clearEditFile = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -68,8 +68,8 @@ namespace GetImages_2
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            this.groupBox9.SuspendLayout();
             this.groupBox10.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             this.SuspendLayout();
             // 
             // exitButton
@@ -85,7 +85,7 @@ namespace GetImages_2
             // 
             // getFilebutton
             // 
-            this.getFilebutton.BackColor = System.Drawing.Color.DeepSkyBlue;
+            this.getFilebutton.BackColor = System.Drawing.Color.PowderBlue;
             this.getFilebutton.Location = new System.Drawing.Point(197, 20);
             this.getFilebutton.Name = "getFilebutton";
             this.getFilebutton.Size = new System.Drawing.Size(228, 121);
@@ -97,11 +97,11 @@ namespace GetImages_2
             // openFileDialog1
             // 
             this.openFileDialog1.Filter = "Rfa files (*.rfa)|*.rfa|All files (*.*)|*.*";
-            this.openFileDialog1.InitialDirectory = "C:\\Users\\Bold\\Documents\\Bold Software\\GetImages\\Files da caricare";
+            this.openFileDialog1.InitialDirectory = "C:\\Users\\Bold\\Documents\\\\Bold Software\\\\GetImages\\\\Files da caricare";
             // 
             // openViewButton
             // 
-            this.openViewButton.BackColor = System.Drawing.Color.Yellow;
+            this.openViewButton.BackColor = System.Drawing.Color.Khaki;
             this.openViewButton.Location = new System.Drawing.Point(38, 31);
             this.openViewButton.Name = "openViewButton";
             this.openViewButton.Size = new System.Drawing.Size(228, 121);
@@ -112,7 +112,7 @@ namespace GetImages_2
             // 
             // exportViewbutton
             // 
-            this.exportViewbutton.BackColor = System.Drawing.Color.SpringGreen;
+            this.exportViewbutton.BackColor = System.Drawing.Color.PaleGreen;
             this.exportViewbutton.Location = new System.Drawing.Point(33, 31);
             this.exportViewbutton.Name = "exportViewbutton";
             this.exportViewbutton.Size = new System.Drawing.Size(228, 121);
@@ -154,7 +154,7 @@ namespace GetImages_2
             this.groupBox2.Size = new System.Drawing.Size(580, 55);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Ultimo file caricato";
+            this.groupBox2.Text = "Ultimo File caricato";
             // 
             // groupBox3
             // 
@@ -230,7 +230,7 @@ namespace GetImages_2
             // 
             // viewScaleTextBox
             // 
-            this.viewScaleTextBox.Location = new System.Drawing.Point(117, 29);
+            this.viewScaleTextBox.Location = new System.Drawing.Point(117, 28);
             this.viewScaleTextBox.Name = "viewScaleTextBox";
             this.viewScaleTextBox.Size = new System.Drawing.Size(72, 22);
             this.viewScaleTextBox.TabIndex = 5;
@@ -289,27 +289,6 @@ namespace GetImages_2
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Utilities";
             // 
-            // groupBox9
-            // 
-            this.groupBox9.Controls.Add(this.clearEditFile);
-            this.groupBox9.Location = new System.Drawing.Point(14, 21);
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(145, 85);
-            this.groupBox9.TabIndex = 1;
-            this.groupBox9.TabStop = false;
-            this.groupBox9.Text = "Cancella File modificati";
-            // 
-            // clearEditFile
-            // 
-            this.clearEditFile.BackColor = System.Drawing.Color.Tomato;
-            this.clearEditFile.Location = new System.Drawing.Point(26, 42);
-            this.clearEditFile.Name = "clearEditFile";
-            this.clearEditFile.Size = new System.Drawing.Size(93, 32);
-            this.clearEditFile.TabIndex = 1;
-            this.clearEditFile.Text = "Cancella";
-            this.clearEditFile.UseVisualStyleBackColor = false;
-            this.clearEditFile.Click += new System.EventHandler(this.clearEditFile_Click);
-            // 
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.openImagesFolderButton);
@@ -331,6 +310,27 @@ namespace GetImages_2
             this.openImagesFolderButton.UseVisualStyleBackColor = false;
             this.openImagesFolderButton.Click += new System.EventHandler(this.openImagesFolderButton_Click);
             // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.clearEditFile);
+            this.groupBox9.Location = new System.Drawing.Point(14, 21);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(145, 85);
+            this.groupBox9.TabIndex = 1;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Cancella File modificati";
+            // 
+            // clearEditFile
+            // 
+            this.clearEditFile.BackColor = System.Drawing.Color.Salmon;
+            this.clearEditFile.Location = new System.Drawing.Point(26, 42);
+            this.clearEditFile.Name = "clearEditFile";
+            this.clearEditFile.Size = new System.Drawing.Size(93, 32);
+            this.clearEditFile.TabIndex = 1;
+            this.clearEditFile.Text = "Cancella";
+            this.clearEditFile.UseVisualStyleBackColor = false;
+            this.clearEditFile.Click += new System.EventHandler(this.clearEditFile_Click);
+            // 
             // ModelessForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -342,7 +342,7 @@ namespace GetImages_2
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
             this.Name = "ModelessForm";
-            this.Text = "BOLD Get Images";
+            this.Text = "BOLD GetImages";
             this.Load += new System.EventHandler(this.ModelessForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -355,8 +355,8 @@ namespace GetImages_2
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.groupBox8.ResumeLayout(false);
-            this.groupBox9.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
+            this.groupBox9.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
