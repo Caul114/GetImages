@@ -234,6 +234,24 @@ namespace GetImages_2
                             Autodesk.Revit.DB.View viewActive = doc.ActiveView;
                             var name = viewActive.Name;
 
+                            // Cambia la lingua del name in Inglese
+                            if (name == "Exterior" || name == "Arrière" || name == "Extérieur" || name == "Esteriore")
+                            {
+                                name = "Exterior";
+                            }
+                            else if (name == "Interior" || name == "Avant" || name == "Intérieur" || name == "Interiore")
+                            {
+                                name = "Interior";
+                            }
+                            else if (name == "Left" || name == "Gauche" || name == "Sinistra")
+                            {
+                                name = "Left";
+                            }
+                            else if (name == "Right" || name == "Droite" || name == "Destra")
+                            {
+                                name = "Right";
+                            }
+
                             // Esegue l'esportazione se la view attiva è una di queste 
                             if (name == "Exterior" || name == "Interior" || name == "Right" || name == "Left")
                             {
@@ -470,9 +488,7 @@ namespace GetImages_2
             {
                 tsx.Start("Change the View Scale");
 
-                doc.ActiveView.get_Parameter(
-                      BuiltInParameter.VIEW_SCALE)
-                        .Set(_scale);
+                doc.ActiveView.Scale = _scale;
 
                 _toSave = 0;
 
@@ -552,8 +568,26 @@ namespace GetImages_2
             // Cambia il valore booleano per attestare che la richiesta della view è multipla
             _single = false;
 
-            // Verifico se il file si apre su Exterior e nel caso salto direttamente all'esportazione dell'immagine
+            // Cambia la lingua del name in Inglese
             string nameViewActive = viewActive.Name;
+            if (nameViewActive == "Exterior" || nameViewActive == "Arrière" || nameViewActive == "Extérieur" || nameViewActive == "Esteriore")
+            {
+                nameViewActive = "Exterior";
+            }
+            else if (nameViewActive == "Interior" || nameViewActive == "Avant" || nameViewActive == "Intérieur" || nameViewActive == "Interiore")
+            {
+                nameViewActive = "Interior";
+            }
+            else if (nameViewActive == "Left" || nameViewActive == "Gauche" || nameViewActive == "Sinistra")
+            {
+                nameViewActive = "Left";
+            }
+            else if (nameViewActive == "Right" || nameViewActive == "Droite" || nameViewActive == "Destra")
+            {
+                nameViewActive = "Right";
+            }
+
+            // Verifica se il file si apre su Exterior e nel caso salta direttamente all'esportazione dell'immagine
             if (nameViewActive == "Exterior" && _imageViewed == "")
             {
                 _imageViewed = nameViewActive;
@@ -567,9 +601,27 @@ namespace GetImages_2
 
             foreach (Autodesk.Revit.DB.View viewElement in viewCollector)
             {
-                var name = viewElement.Name;                
+                var name = viewElement.Name;
 
-                switch(name)
+                // Cambia la lingua del name in Inglese
+                if (name == "Exterior" || name == "Arrière" || name == "Extérieur" || name == "Esteriore")
+                {
+                    name = "Exterior";
+                }
+                else if (name == "Interior" || name == "Avant" || name == "Intérieur" || name == "Interiore")
+                {
+                    name = "Interior";
+                }
+                else if (name == "Left" || name == "Gauche" || name == "Sinistra")
+                {
+                    name = "Left";
+                }
+                else if (name == "Right" || name == "Droite" || name == "Destra")
+                {
+                    name = "Right";
+                }
+
+                switch (name)
                 {
                     case "Exterior":
                         if(nameViewActive != "Exterior" && nameViewActive != "Interior" && nameViewActive != "Left" && nameViewActive != "Right")
@@ -668,6 +720,24 @@ namespace GetImages_2
             Document doc = uiapp.ActiveUIDocument.Document;
             // Estrae il nome della View
             var name = viewActive.Name;
+
+            // Cambia la lingua del name in Inglese
+            if (name == "Exterior" || name == "Arrière" || name == "Extérieur" || name == "Esteriore")
+            {
+                name = "Exterior";
+            }
+            else if (name == "Interior" || name == "Avant" || name == "Intérieur" || name == "Interiore")
+            {
+                name = "Interior";
+            }
+            else if (name == "Left" || name == "Gauche" || name == "Sinistra")
+            {
+                name = "Left";
+            }
+            else if (name == "Right" || name == "Droite" || name == "Destra")
+            {
+                name = "Right";
+            }
 
             // Esporta il file immagine a seconda del nome della view
             if (name == "Exterior" || name == "Interior" || name == "Right" || name == "Left")
