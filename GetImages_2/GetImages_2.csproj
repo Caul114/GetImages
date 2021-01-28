@@ -15,7 +15,7 @@
     <ProjectGuid>{00D4B665-C379-46F0-A3E1-C071854C9132}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GetImages</RootNamespace>
+    <RootNamespace>GetImages_2</RootNamespace>
     <AssemblyName>GetImages</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -106,9 +106,9 @@
     <Content Include="GetImages.addin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\code-small.png" />
-    <Content Include="Resources\revitIcon.ico" />
-    <Content Include="Resources\revit_small.png" />
+    <EmbeddedResource Include="Resources\BOLDsft_16.ico" />
+    <EmbeddedResource Include="Resources\BOLDsft_16.png" />
+    <EmbeddedResource Include="Resources\BOLDsft_32.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ModelessForm.resx">
