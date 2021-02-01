@@ -115,7 +115,14 @@ namespace GetImages_2
                 // La finestra di dialogo diventa il proprietario responsabile della loro disposizione, alla fine.
                 m_MyForm = new ModelessForm(exEvent, handler);
                 m_MyForm.Show();
-                m_MyForm.TopMost = true;
+                if(ModelessForm.thisModForm.NotSaveFolder)
+                {
+                    m_MyForm.TopMost = false;
+                }
+                else
+                {
+                    m_MyForm.TopMost = true;
+                }
             }
         }
 

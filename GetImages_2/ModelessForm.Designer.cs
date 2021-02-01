@@ -34,7 +34,6 @@ namespace GetImages_2
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModelessForm));
-            this.exitButton = new System.Windows.Forms.Button();
             this.getFilebutton = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.openViewButton = new System.Windows.Forms.Button();
@@ -42,6 +41,9 @@ namespace GetImages_2
             this.getFileTextBox = new System.Windows.Forms.TextBox();
             this.exportViewTextBox = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.saveImagesFolderButton = new System.Windows.Forms.Button();
+            this.openImagesFolderButton = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
@@ -56,12 +58,13 @@ namespace GetImages_2
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
-            this.groupBox10 = new System.Windows.Forms.GroupBox();
-            this.openImagesFolderButton = new System.Windows.Forms.Button();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.clearEditFile = new System.Windows.Forms.Button();
+            this.exitButton = new System.Windows.Forms.Button();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.defaultImagesFolderButton = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox7.SuspendLayout();
@@ -69,25 +72,13 @@ namespace GetImages_2
             this.groupBox4.SuspendLayout();
             this.groupBox6.SuspendLayout();
             this.groupBox8.SuspendLayout();
-            this.groupBox10.SuspendLayout();
             this.groupBox9.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // exitButton
-            // 
-            this.exitButton.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.exitButton.Location = new System.Drawing.Point(186, 76);
-            this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(93, 32);
-            this.exitButton.TabIndex = 0;
-            this.exitButton.Text = "Exit";
-            this.exitButton.UseVisualStyleBackColor = false;
-            this.exitButton.Click += new System.EventHandler(this.exitButton_Click_1);
             // 
             // getFilebutton
             // 
             this.getFilebutton.BackColor = System.Drawing.Color.PowderBlue;
-            this.getFilebutton.Location = new System.Drawing.Point(197, 20);
+            this.getFilebutton.Location = new System.Drawing.Point(170, 20);
             this.getFilebutton.Name = "getFilebutton";
             this.getFilebutton.Size = new System.Drawing.Size(228, 121);
             this.getFilebutton.TabIndex = 1;
@@ -97,8 +88,7 @@ namespace GetImages_2
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "Rfa files (*.rfa)|*.rfa|All files (*.*)|*.*";
-            this.openFileDialog1.InitialDirectory = "C:\\Users\\Bold\\Documents\\\\Bold Software\\\\GetImages\\\\Files da caricare";
+            this.openFileDialog1.Filter = "Rfa files (*.rfa)|*.rfa|All files (*.*)|*.*";            
             // 
             // openViewButton
             // 
@@ -138,6 +128,7 @@ namespace GetImages_2
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.groupBox10);
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.getFilebutton);
             this.groupBox1.Location = new System.Drawing.Point(38, 36);
@@ -146,6 +137,39 @@ namespace GetImages_2
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Caricamento File";
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.saveImagesFolderButton);
+            this.groupBox10.Controls.Add(this.openImagesFolderButton);
+            this.groupBox10.Location = new System.Drawing.Point(492, 11);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(119, 105);
+            this.groupBox10.TabIndex = 2;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Cartella Images";
+            // 
+            // saveImagesFolderButton
+            // 
+            this.saveImagesFolderButton.BackColor = System.Drawing.Color.CornflowerBlue;
+            this.saveImagesFolderButton.Location = new System.Drawing.Point(12, 26);
+            this.saveImagesFolderButton.Name = "saveImagesFolderButton";
+            this.saveImagesFolderButton.Size = new System.Drawing.Size(93, 32);
+            this.saveImagesFolderButton.TabIndex = 2;
+            this.saveImagesFolderButton.Text = "Salva";
+            this.saveImagesFolderButton.UseVisualStyleBackColor = false;
+            this.saveImagesFolderButton.Click += new System.EventHandler(this.saveImagesFolderButton_Click);
+            // 
+            // openImagesFolderButton
+            // 
+            this.openImagesFolderButton.BackColor = System.Drawing.Color.Thistle;
+            this.openImagesFolderButton.Location = new System.Drawing.Point(12, 62);
+            this.openImagesFolderButton.Name = "openImagesFolderButton";
+            this.openImagesFolderButton.Size = new System.Drawing.Size(93, 32);
+            this.openImagesFolderButton.TabIndex = 1;
+            this.openImagesFolderButton.Text = "Apri";
+            this.openImagesFolderButton.UseVisualStyleBackColor = false;
+            this.openImagesFolderButton.Click += new System.EventHandler(this.openImagesFolderButton_Click);
             // 
             // groupBox2
             // 
@@ -280,7 +304,7 @@ namespace GetImages_2
             // 
             // groupBox8
             // 
-            this.groupBox8.Controls.Add(this.groupBox10);
+            this.groupBox8.Controls.Add(this.defaultImagesFolderButton);
             this.groupBox8.Controls.Add(this.groupBox9);
             this.groupBox8.Controls.Add(this.exitButton);
             this.groupBox8.Location = new System.Drawing.Point(355, 514);
@@ -289,27 +313,6 @@ namespace GetImages_2
             this.groupBox8.TabIndex = 10;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Utilities";
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.openImagesFolderButton);
-            this.groupBox10.Location = new System.Drawing.Point(172, 11);
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(119, 59);
-            this.groupBox10.TabIndex = 2;
-            this.groupBox10.TabStop = false;
-            this.groupBox10.Text = "Cartella Images";
-            // 
-            // openImagesFolderButton
-            // 
-            this.openImagesFolderButton.BackColor = System.Drawing.Color.Thistle;
-            this.openImagesFolderButton.Location = new System.Drawing.Point(14, 21);
-            this.openImagesFolderButton.Name = "openImagesFolderButton";
-            this.openImagesFolderButton.Size = new System.Drawing.Size(93, 32);
-            this.openImagesFolderButton.TabIndex = 1;
-            this.openImagesFolderButton.Text = "Apri";
-            this.openImagesFolderButton.UseVisualStyleBackColor = false;
-            this.openImagesFolderButton.Click += new System.EventHandler(this.openImagesFolderButton_Click);
             // 
             // groupBox9
             // 
@@ -332,6 +335,28 @@ namespace GetImages_2
             this.clearEditFile.UseVisualStyleBackColor = false;
             this.clearEditFile.Click += new System.EventHandler(this.clearEditFile_Click);
             // 
+            // exitButton
+            // 
+            this.exitButton.BackColor = System.Drawing.SystemColors.ControlDark;
+            this.exitButton.Location = new System.Drawing.Point(187, 73);
+            this.exitButton.Name = "exitButton";
+            this.exitButton.Size = new System.Drawing.Size(93, 32);
+            this.exitButton.TabIndex = 0;
+            this.exitButton.Text = "Exit";
+            this.exitButton.UseVisualStyleBackColor = false;
+            this.exitButton.Click += new System.EventHandler(this.exitButton_Click);
+            // 
+            // defaultImagesFolderButton
+            // 
+            this.defaultImagesFolderButton.BackColor = System.Drawing.Color.MediumVioletRed;
+            this.defaultImagesFolderButton.Location = new System.Drawing.Point(187, 28);
+            this.defaultImagesFolderButton.Name = "defaultImagesFolderButton";
+            this.defaultImagesFolderButton.Size = new System.Drawing.Size(93, 32);
+            this.defaultImagesFolderButton.TabIndex = 3;
+            this.defaultImagesFolderButton.Text = "Ripristina";
+            this.defaultImagesFolderButton.UseVisualStyleBackColor = false;
+            this.defaultImagesFolderButton.Click += new System.EventHandler(this.defaultImagesFolderButton_Click);
+            // 
             // ModelessForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -347,6 +372,7 @@ namespace GetImages_2
             this.Text = "BOLD GetImages";
             this.Load += new System.EventHandler(this.ModelessForm_Load);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox10.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -357,14 +383,12 @@ namespace GetImages_2
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
             this.groupBox8.ResumeLayout(false);
-            this.groupBox10.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
-        private Button exitButton;
         private Button getFilebutton;
         private OpenFileDialog openFileDialog1;
         private Button openViewButton;
@@ -391,5 +415,8 @@ namespace GetImages_2
         private GroupBox groupBox10;
         private Button openImagesFolderButton;
         private FolderBrowserDialog folderBrowserDialog1;
+        private Button saveImagesFolderButton;
+        private Button exitButton;
+        private Button defaultImagesFolderButton;
     }
 }

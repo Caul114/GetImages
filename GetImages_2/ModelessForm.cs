@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.UI;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,34 +33,52 @@ namespace GetImages_2
         // In questo esempio, la finestra di dialogo possiede il gestore e gli oggetti evento, 
         // ma non è un requisito. Potrebbero anche essere proprietà statiche dell'applicazione.
 
+        #region Private data members
+
         private RequestHandler m_Handler;
         private ExternalEvent m_ExEvent;
+
+        // Dichiaro un instanza di questa form
+        public static ModelessForm thisModForm = null;
+
+        // Percorso del singolo file .json da importare di default
+        private string _pathFileGetImagesConfig = @"\BOLD Software\GetImages\ConfigGetImagesPath.json";
+        private string _pathFileTxt = "";
 
         // List dei nomi delle View
         private List<string> viewNames = new List<string>() { "Exterior", "Interior", "Left", "Right" };
 
         // Valore del path attivo
-        private string _filePath;
+        private string _filePath = "";
 
-        // Percorso della cartella Images
-        private string _imagesPath;
+        // Stabilisce il percorso di salvataggio delle immagini
+        //private string _imagesPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\BOLD Software\GetImages\Images";
+        private string _imagesPath = "";
 
         // Valore dall'utente nella TextBox della View Scale modificato 
-        private int _scaleEdit;
+        private int _scaleEdit = 0;
 
         // Lista dei valori del Livello di Dettaglio della View
         private List<string> _detailLevels = new List<string>() { "Coarse", "Medium", "Fine" };
 
         // Valore scelto dall'utente nella comboBox del Livello di Dettaglio della View
-        private string _detailLevelEdit;
+        private string _detailLevelEdit = "";
         private int _detailLevelIndex = 1;
 
         // Lista dei valori dello Stile di Visualizzazione della View
         private List<string> _visualStyles = new List<string>() { "Wireframe", "Hidden Line", "Shaded", "Shaded with Edges", "Consistent Colors", "Realistic" };
 
         // Valore scelto dall'utente nella comboBox dello Stile di Visualizzazione della View
-        private string _visualStyleEdit;
+        private string _visualStyleEdit = "";
         private int _visualStyleIndex = 2;
+
+        // Dichiaro la Form del cambio percorso della Cartella delle Immagini
+        private SaveForm _saveForm;
+
+        // Metodo di controllo booleano nel caso in cui il pecorso della cartella immagini nel file .json non sia corretto
+        private bool _notSaveFolder = false;
+
+        #endregion
 
         #region Class public property
         /// <summary>
@@ -68,6 +87,22 @@ namespace GetImages_2
         public string FilePath
         {
             get { return _filePath; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public String PathFileGetImagesConfig
+        {
+            get { return _pathFileGetImagesConfig; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public String ImagesPath
+        {
+            get { return _imagesPath; }
         }
 
         /// <summary>
@@ -109,6 +144,14 @@ namespace GetImages_2
         {
             get { return _visualStyleIndex; }
         }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public bool NotSaveFolder
+        {
+            get { return _notSaveFolder; }
+        }
         #endregion
 
         /// <summary>
@@ -121,8 +164,23 @@ namespace GetImages_2
             m_Handler = handler;
             m_ExEvent = exEvent;
 
-            // Cattura il apth della cartella Images in cui queste vengono salvate
-            _imagesPath = m_Handler.ImagesPath;
+            // Riempie l'istanza di questa classe con la Form ModelessForm
+            thisModForm = this;
+
+            openFileDialog1.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) +
+                @"\OneDrive - BOLD\BOLD Software\Repository for Plugin\GetImages\Files da caricare";
+
+            // Verifica se il Path delle Immagini esista e lo importa
+            GetFileTxt();
+            if(_imagesPath == "")
+            {
+                MessageBox.Show("La cartella Images non è stato caricata."
+                        + "\nSegui questa procedura per caricarla dal percorso che preferisci.");
+
+                // Apre la Form SaveForm
+                OpenSaveForm();
+                _notSaveFolder = true;
+            }
 
             // Imposta il TextBox della View Scale
             viewScaleTextBox.Text = Convert.ToString(m_Handler.Scale);
@@ -222,14 +280,61 @@ namespace GetImages_2
         {
         }
 
+        /// <summary>
+        ///   Verifica se il file .json di configurazione esista o meno
+        /// </summary>
+        /// 
+        public void GetFileTxt()
+        {
+            _pathFileTxt = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + _pathFileGetImagesConfig;
 
+            if(File.Exists(_pathFileTxt))
+            {
+                // Legge il .json dal file
+                string jsonText = File.ReadAllText(_pathFileTxt);
+                if (jsonText != "")
+                {
+                    var traduction = JsonConvert.DeserializeObject<IList<JsonData>>(jsonText);
+                    JsonData singleItem = traduction.FirstOrDefault(x => x.Id == 2);
+                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + singleItem.Path))
+                    {
+                        _imagesPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + singleItem.Path;
+                    } 
+                    else if(singleItem.Path.Contains(":\\"))
+                    {
+                        _imagesPath = singleItem.Path;
+                    }
+                }
+            }
+            else
+            {
+                _imagesPath = "";
+            }
+        }
 
+        /// <summary>
+        ///   Metodo che imposta il nuovo Path delle Immagini
+        /// </summary>
+        /// 
+        public void SetNewImagesPath()
+        {
+            _imagesPath = _saveForm.NewPathImagesFolder;
+        }
+
+        /// <summary>
+        ///   Metodo che apre il FILE da importare
+        /// </summary>
+        /// 
         private void getFilebutton_Click(object sender, EventArgs e)
         {
             // Apro il nuovo file .rfa
             MakeRequest(RequestId.File);
         }
 
+        /// <summary>
+        ///   Metodo che apre la VIEW da visualizzare
+        /// </summary>
+        /// 
         private void openViewButton_Click(object sender, EventArgs e)
         {
             MakeRequest(RequestId.View);
@@ -276,6 +381,10 @@ namespace GetImages_2
         {
             var fileContent = string.Empty;
             _filePath = string.Empty;
+            if(m_Handler.NewPathFamily)
+            {
+                openFileDialog1.InitialDirectory = m_Handler.PathDirectoryName;
+            }
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -388,28 +497,34 @@ namespace GetImages_2
         }
 
         /// <summary>
-        ///   Cancella i file che sono stati modificati nelle operazioni precedenti
+        ///   Apre la Form che permette di cambiare la cartella di salvataggio delle immagini
         /// </summary>
-        private void clearEditFile_Click(object sender, EventArgs e)
+        private void saveImagesFolderButton_Click(object sender, EventArgs e)
         {
-            // Cancella i File modificati
-            MakeRequest(RequestId.Delete);
+            // Inizializzo la Form del cambio percorso della Cartella delle Immagini
+            this.DozeOff();
+            this.SendToBack();
+            _saveForm = new SaveForm();
+            _saveForm.Show();
+            _saveForm.TopMost = true;
         }
 
         /// <summary>
-        ///   Exit - chiude la finestra di dialogo
+        ///   Apre la form che permette di caricare la cartella di salvataggio delle immagini
         /// </summary>
-        /// 
-        private void exitButton_Click_1(object sender, EventArgs e)
+        private void OpenSaveForm()
         {
-            MakeRequest(RequestId.Esc);
+            // Inizializzo la Form del cambio percorso della Cartella delle Immagini
+            this.DozeOff();
+            this.SendToBack();
+            _saveForm = new SaveForm();
+            _saveForm.Show();
+            _saveForm.TopMost = true;
         }
 
-        public void CloseForm()
-        {
-            Close();
-        }
-
+        /// <summary>
+        ///   Apre la cartella Immagini
+        /// </summary>
         private void openImagesFolderButton_Click(object sender, EventArgs e)
         {
             if (Directory.Exists(_imagesPath))
@@ -426,7 +541,50 @@ namespace GetImages_2
                     Process.Start(_imagesPath);
                 }
             }
-
         }
+
+        /// <summary>
+        ///   Comando di chiusura della Form
+        /// </summary>
+        public void CloseForm()
+        {
+            Close();
+        }
+
+        /// <summary>
+        ///   Ripristina i percorsi di default del Plug-in
+        /// </summary>
+        private void defaultImagesFolderButton_Click(object sender, EventArgs e)
+        {
+            string defaultImagesFolder = @"\OneDrive - BOLD\BOLD Software\Repository for Plugin\GetImages\Images";
+            _imagesPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + defaultImagesFolder;
+
+            // Scrive il Path di default della cartella Images nel File .json di configurazione
+            Json fileJson = new Json();
+            fileJson.UpdateJson(2, 1, "ImagesFolderPath", defaultImagesFolder);
+
+            // avvisa che l'operazione è stata effettuata
+            MessageBox.Show("Il ripristino dei Percorsi è andato a buon fine.");
+        }
+
+        /// <summary>
+        ///   Cancella i file che sono stati modificati nelle operazioni precedenti
+        /// </summary>
+        private void clearEditFile_Click(object sender, EventArgs e)
+        {
+            // Cancella i File modificati
+            MakeRequest(RequestId.Delete);
+        }
+
+        /// <summary>
+        ///   Exit - chiude la finestra di dialogo
+        /// </summary>
+        /// 
+        private void exitButton_Click(object sender, EventArgs e)
+        {
+            MakeRequest(RequestId.Esc);
+        }
+
+
     }  // class
 }

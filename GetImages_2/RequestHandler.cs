@@ -41,6 +41,10 @@ namespace GetImages_2
     public class RequestHandler : IExternalEventHandler  // Un'istanza di una classe che implementa questa interfaccia verrà registrata prima con Revit e ogni volta che viene generato l'evento esterno corrispondente, verrà richiamato il metodo Execute di questa interfaccia.
     {
         #region Private data members
+
+        // Dichiaro un instanza di questa form
+        public static RequestHandler thisReqHand = null;
+
         // Il valore dell'ultima richiesta effettuata dal modulo non modale
         private Request m_request = new Request();
 
@@ -51,19 +55,26 @@ namespace GetImages_2
         private static string _path = "";
 
         // La stringa da riempire con la Path del file caricato precedentemente
-        private static string _pathOld = "";
-
-        // Stabilisce il percorso di salvataggio delle immagini
-        private string _images_path = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\Images";
+        private static string _pathOld = "";        
 
         // Ricava il nome del file da salvare
         private static string _pathName = "";
 
+        // Il percorso della Cartella dei file da aprire
+        private string _pathDirectoryName = "";
+
+        // Valore booleano di controllo
+        private bool _newPathFamily = false;
+
         // Percorso temporaneo della cartella dei file salvati
-        private static string _dirpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\Bold Software\GetImages\File modificati";
+        private static string _dirpath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + 
+            @"\BOLD Software\GetImages\File modificati";
 
         // Percorso temporaneo dei file salvati
         private static string _filepath = "";
+
+        // Percorso della cartella Immagini
+        private static string _images_path = "";
 
         // La stringa che memorizza l'ultima view vista
         private string _imageViewed = "";
@@ -76,7 +87,6 @@ namespace GetImages_2
 
         // La stringa con il nome dell'ultimo file salvato
         private string _exportedView;
-
 
         // Valore contenuto nella View Scale
         private int _scale = 20;
@@ -99,6 +109,22 @@ namespace GetImages_2
         public Request Request
         {
             get { return m_request; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public String PathDirectoryName
+        {
+            get { return _pathDirectoryName; }
+        }
+
+        /// <summary>
+        /// Proprietà pubblica per accedere al valore della richiesta corrente
+        /// </summary>
+        public bool NewPathFamily
+        {
+            get { return _newPathFamily; }
         }
 
         /// <summary>
@@ -131,15 +157,8 @@ namespace GetImages_2
         public String ExportedView
         {
             get { return _exportedView; }
-        }
+        }  
 
-        /// <summary>
-        /// Proprietà pubblica per accedere al valore della richiesta corrente
-        /// </summary>
-        public String ImagesPath
-        {
-            get { return _images_path; }
-        }
 
         /// <summary>
         /// Proprietà pubblica per accedere al valore della richiesta corrente
@@ -156,8 +175,8 @@ namespace GetImages_2
         /// </summary>
         public RequestHandler()
         {
-            // Costruisce i membri dei dati per le proprietà
-            
+            // Inizializzo l'istanza con questa Form
+            thisReqHand = this;            
         }
         #endregion
 
@@ -192,6 +211,8 @@ namespace GetImages_2
                         {
                             // Cancella i file modificati
                             DeleteFileModified(uiapp);
+                            // Recupera il percorso delle immagini
+                            _images_path = ModelessForm.thisModForm.ImagesPath;
                             // Chiama la Form
                             modelessForm = App.thisApp.RetriveForm();
                             // Assegno alla comboBox della View il valore predefinito
@@ -206,6 +227,10 @@ namespace GetImages_2
                                 OpenFile(uiapp, _path);
                                 // Scrive nel TextBox l'ultima operazione effettuata
                                 modelessForm.LastFileOpened();
+                                // Estrae il percorso della Directory del _path
+                                _pathDirectoryName = Path.GetDirectoryName(_path);
+                                // Assegna al valore booleano di controllo un valore true
+                                _newPathFamily = true;
                             }
                             _pathOld = _path;
                             break;
@@ -709,7 +734,6 @@ namespace GetImages_2
                     uidoc.SaveAndClose();
                 } 
             }
-
         }
 
         /// <summary>
