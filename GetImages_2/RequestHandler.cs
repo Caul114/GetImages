@@ -775,16 +775,16 @@ namespace GetImages_2
                     switch(name)
                     {
                         case "Exterior":
-                            filepath = Path.Combine(_images_path, _pathName + "_F.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_F.bmp");
                             break;
                         case "Interior":
-                            filepath = Path.Combine(_images_path, _pathName + "_P.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_P.bmp");
                             break;
                         case "Right":
-                            filepath = Path.Combine(_images_path, _pathName + "_R.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_R.bmp");
                             break;
                         case "Left":
-                            filepath = Path.Combine(_images_path, _pathName + "_L.png");
+                            filepath = Path.Combine(_images_path, _pathName + "_L.bmp");
                             break;
                     }
 
@@ -798,9 +798,9 @@ namespace GetImages_2
                     img.ImageResolution = ImageResolution.DPI_600;
                     img.FitDirection = FitDirectionType.Horizontal;
                     img.ExportRange = ExportRange.CurrentView;
-                    img.HLRandWFViewsFileType = ImageFileType.PNG;
+                    img.HLRandWFViewsFileType = ImageFileType.BMP;
                     img.FilePath = filepath;
-                    img.ShadowViewsFileType = ImageFileType.PNG;
+                    img.ShadowViewsFileType = ImageFileType.BMP;
 
                     // Esporta l'immagine viewActive con le specifiche salvate
                     doc.ExportImage(img);
